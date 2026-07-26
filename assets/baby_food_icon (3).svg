@@ -1,0 +1,43 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bowlGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E24C56"/>
+      <stop offset="55%" stop-color="#C81D2A"/>
+      <stop offset="100%" stop-color="#8F1420"/>
+    </linearGradient>
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FBD38A"/>
+      <stop offset="50%" stop-color="#F5A623"/>
+      <stop offset="100%" stop-color="#E0871A"/>
+    </linearGradient>
+    <linearGradient id="spoonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EFDCCB"/>
+    </linearGradient>
+    <radialGradient id="highlight" cx="35%" cy="25%" r="45%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="60" cy="98" rx="26" ry="5" fill="#8F1420" opacity="0.18"/>
+
+  <path d="M40 24c-4 4-4 9 0 13s4 9 0 13" stroke="#F5A623" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M60 18c-4 4-4 9 0 13s4 9 0 13" stroke="#F5A623" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <path d="M80 24c-4 4-4 9 0 13s4 9 0 13" stroke="#F5A623" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.85"/>
+
+  <path d="M20 52c0-3.5 2.5-6 6-6h68c3.5 0 6 2.5 6 6 0 23-18 42-40 42S20 75 20 52z" fill="url(#bowlGrad)"/>
+  <path d="M20 52c0-3.5 2.5-6 6-6h68c3.5 0 6 2.5 6 6 0 23-18 42-40 42S20 75 20 52z" fill="url(#highlight)"/>
+
+  <ellipse cx="60" cy="51.5" rx="40" ry="8" fill="url(#rimGrad)"/>
+  <ellipse cx="60" cy="51.5" rx="40" ry="8" fill="none" stroke="#B9700F" stroke-width="1" opacity="0.4"/>
+  <ellipse cx="60" cy="49.5" rx="33" ry="5.4" fill="#FBF3EE" opacity="0.9"/>
+
+  <path d="M44 92c0-5 7-8 16-8s16 3 16 8-7 7-16 7-16-2-16-7z" fill="#7A1119"/>
+
+  <g transform="rotate(30 90 38)">
+    <ellipse cx="90" cy="30" rx="10" ry="13" fill="url(#spoonGrad)" stroke="#9A6B4A" stroke-width="2"/>
+    <rect x="87" y="41" width="6" height="36" rx="3" fill="url(#spoonGrad)" stroke="#9A6B4A" stroke-width="2"/>
+    <ellipse cx="87" cy="26" rx="3.5" ry="5" fill="#ffffff" opacity="0.7"/>
+  </g>
+</svg>
