@@ -1,0 +1,45 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="chocGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9C6B3E"/>
+      <stop offset="50%" stop-color="#7A4A24"/>
+      <stop offset="100%" stop-color="#5B3216"/>
+    </linearGradient>
+    <linearGradient id="wrapGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E24C56"/>
+      <stop offset="100%" stop-color="#9A1520"/>
+    </linearGradient>
+    <linearGradient id="foldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8F1420"/>
+      <stop offset="100%" stop-color="#6B0F17"/>
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="60" cy="106" rx="26" ry="5" fill="#3A1D0C" opacity="0.16"/>
+
+  <!-- Shokolad tanasi: vertikal, 3x5 = 15 bo'lak, yuqori o'ng burchagi tishlangan -->
+  <path d="M41,18
+           L70,18
+           A15,15 0 0,0 85,33
+           L85,96
+           A6,6 0 0,1 79,102
+           L41,102
+           A6,6 0 0,1 35,96
+           L35,24
+           A6,6 0 0,1 41,18 Z"
+        fill="url(#chocGrad)"/>
+
+  <!-- Bo'lak chiziqlari (3 ustun, 5 qator) -->
+  <line x1="51.7" y1="18" x2="51.7" y2="102" stroke="#3A1D0C" stroke-width="1.8" opacity="0.55"/>
+  <line x1="68.3" y1="18" x2="68.3" y2="102" stroke="#3A1D0C" stroke-width="1.8" opacity="0.55"/>
+  <line x1="35" y1="34.8" x2="85" y2="34.8" stroke="#3A1D0C" stroke-width="1.8" opacity="0.55"/>
+  <line x1="35" y1="51.6" x2="85" y2="51.6" stroke="#3A1D0C" stroke-width="1.8" opacity="0.55"/>
+  <line x1="35" y1="68.4" x2="85" y2="68.4" stroke="#3A1D0C" stroke-width="1.8" opacity="0.55"/>
+  <line x1="35" y1="85.2" x2="85" y2="85.2" stroke="#3A1D0C" stroke-width="1.8" opacity="0.55"/>
+
+  <!-- Qizil o'rov qog'ozi: pastki yarmini yopadi -->
+  <path d="M35,60 H85 V96 A6,6 0 0,1 79,102 H41 A6,6 0 0,1 35,96 Z" fill="url(#wrapGrad)"/>
+
+  <!-- Qayrilgan burma (peel fold) -->
+  <path d="M35,60 H85 L78,68 H42 Z" fill="url(#foldGrad)"/>
+</svg>
