@@ -860,6 +860,13 @@ function render() {
   const crumbs = document.getElementById('crumbs');
 
   crumbs.innerHTML = '';
+  if (path.length) {
+    const backBtn = document.createElement('button');
+    backBtn.textContent = '← Orqaga';
+    backBtn.style.fontWeight = '700';
+    backBtn.onclick = () => handleBack();
+    crumbs.appendChild(backBtn);
+  }
   const rootBtn = document.createElement('button');
   rootBtn.textContent = 'Katalog';
   rootBtn.onclick = () => { path = []; render(); };
