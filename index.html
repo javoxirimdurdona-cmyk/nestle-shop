@@ -29,16 +29,16 @@
   h1, h2, h3, .display { font-family: 'Fraunces', serif; }
 
   header.top {
-    padding: 18px 16px 44px;
+    padding: 14px 16px 30px;
     background: var(--primary);
     color: white;
-    border-radius: 0 0 26px 26px;
+    border-radius: 0 0 18px 18px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
   }
   header.top .logo {
-    width: 50px; height: 50px;
+    width: 42px; height: 42px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
@@ -46,19 +46,22 @@
     display: flex; align-items: center; justify-content: center;
   }
   header.top .logo img { width: 100%; height: 100%; object-fit: contain; }
-  header.top .brand { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
-  header.top .sub { font-size: 12.5px; opacity: 0.85; margin-top: 2px; }
+  header.top .brand { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  header.top .sub { font-size: 11.5px; opacity: 0.85; margin-top: 1px; }
 
   .crumbs {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 12px 16px 4px;
+    padding: 0 16px;
     font-size: 13px;
     color: var(--muted);
     flex-wrap: wrap;
-    margin-top: -26px;
+    margin-top: -18px;
+    position: relative;
+    z-index: 5;
   }
+  .crumbs:empty { margin-top: 0; }
   .crumbs button {
     background: var(--card);
     border: 1px solid var(--line);
@@ -68,6 +71,7 @@
     padding: 6px 12px;
     border-radius: 999px;
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   }
   .crumbs span.sep { color: var(--muted); }
 
@@ -103,32 +107,42 @@
   .tile .meta { display: none; }
 
   .search-wrap {
-    padding: 14px 16px 4px;
+    padding: 8px 16px 2px;
   }
   .search-box {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 12px 16px;
-    box-shadow: 0 3px 14px rgba(200,29,42,0.06);
+    border-radius: 14px;
+    padding: 3px 12px;
+    box-shadow: 0 2px 8px rgba(200,29,42,0.05);
+    width: 100%;
+    max-width: 100%;
+    transition: width .18s ease;
+  }
+  .search-box:focus-within {
+    width: 100%;
   }
   .search-box input {
     border: none;
     outline: none;
     background: none;
     flex: 1;
-    font-size: 14.5px;
+    width: 0;
+    min-width: 0;
+    padding: 15px 0 4px;
+    line-height: 1.2;
+    font-size: 13px;
     font-family: 'Inter', sans-serif;
     color: var(--ink);
   }
   .search-box input::placeholder { color: var(--muted); }
-  .search-box .ic { font-size: 16px; color: var(--muted); }
+  .search-box .ic { font-size: 13px; color: var(--muted); flex-shrink: 0; padding-top: 3px; }
   .search-clear {
     border: none; background: none; color: var(--muted);
-    font-size: 18px; cursor: pointer; padding: 0 2px;
+    font-size: 15px; cursor: pointer; padding: 0 2px; flex-shrink: 0;
   }
 
   .popular-section { padding: 4px 16px 6px; }
@@ -155,7 +169,7 @@
     box-shadow: 0 3px 14px rgba(200,29,42,0.06);
   }
   .popular-card .icon {
-    width: 100%; height: 60px;
+    width: 100%; height: 76px;
     border-radius: 12px;
     background: #F4E9E2;
     display: flex; align-items: center; justify-content: center;
@@ -163,7 +177,7 @@
     margin-bottom: 8px;
     overflow: hidden;
   }
-  .popular-card .icon img { width: 100%; height: 100%; object-fit: cover; }
+  .popular-card .icon img { width: 100%; height: 100%; object-fit: contain; }
   .popular-card .name { font-size: 12.5px; font-weight: 700; line-height: 1.3; min-height: 32px; }
   .popular-card .price { font-size: 11.5px; color: var(--primary-dark); font-weight: 700; margin-top: 4px; }
   .popular-card button {
@@ -443,6 +457,8 @@
   </div>
 </header>
 
+<div class="crumbs" id="crumbs"></div>
+
 <div class="search-wrap">
   <div class="search-box">
     <span class="ic">🔍</span>
@@ -452,7 +468,6 @@
 </div>
 
 <div id="popularSection"></div>
-<div class="crumbs" id="crumbs"></div>
 <div id="content"></div>
 
 <div class="cart-bar" id="cartBar" style="display:none;" onclick="openCart()">
@@ -2792,7 +2807,9 @@ function flattenAllProducts() {
 
 function onSearchInput() {
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const box = document.getElementById('searchInput').closest('.search-box');
   document.getElementById('searchClearBtn').style.display = q ? 'block' : 'none';
+  box.style.width = q ? '100%' : '';
   if (!q) {
     document.getElementById('crumbs').style.display = '';
     render();
@@ -2826,7 +2843,7 @@ function clearSearch() {
 }
 
 // ============ MASHHUR MAHSULOTLAR ============
-const POPULAR_CODES = ['nan1_400', 'chocolate', 'nescafe_gold_95', 'kitkat_64', 'alpen_milk'];
+const POPULAR_CODES = ['nan1_400', 'nescafe_gold_95', 'kitkat_64', 'alpen_milk'];
 function renderPopular() {
   const el = document.getElementById('popularSection');
   if (path.length || view !== 'catalog') { el.innerHTML = ''; return; }
