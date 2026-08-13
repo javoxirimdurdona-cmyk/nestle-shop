@@ -9,14 +9,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #241213;
-    --bg: #FBF3EE;
+    --ink: #2B1C1D;
+    --bg: #FCF6F1;
     --card: #FFFFFF;
-    --primary: #C81D2A;
-    --primary-dark: #9A1520;
+    --primary: #D42B3A;
+    --primary-dark: #A11C29;
     --accent: #F5A623;
-    --muted: #9B8783;
-    --line: #F0DFD8;
+    --muted: #A6968F;
+    --line: #F2E4DC;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body {
@@ -81,27 +81,103 @@
 
   .tile {
     background: var(--card);
-    border-radius: 18px;
-    padding: 16px;
+    border-radius: 22px;
+    padding: 18px 16px;
     border: 1px solid var(--line);
     cursor: pointer;
     transition: transform .12s ease;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    box-shadow: 0 2px 10px rgba(200,29,42,0.06);
+    gap: 10px;
+    box-shadow: 0 3px 14px rgba(200,29,42,0.07);
   }
-  .tile:active { transform: scale(0.97); }
+  .tile:active { transform: scale(0.96); }
   .tile .icon {
-    width: 46px; height: 46px;
-    border-radius: 13px;
-    background: #EFE2DC;
-    border: 1px solid var(--line);
+    width: 58px; height: 58px;
+    border-radius: 16px;
+    background: #F4E9E2;
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
+    font-size: 28px;
   }
-  .tile .name { font-weight: 700; font-size: 15px; }
-  .tile .meta { font-size: 12.5px; color: var(--muted); }
+  .tile .name { font-weight: 700; font-size: 15.5px; line-height: 1.25; }
+  .tile .meta { display: none; }
+
+  .search-wrap {
+    padding: 14px 16px 4px;
+  }
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 12px 16px;
+    box-shadow: 0 3px 14px rgba(200,29,42,0.06);
+  }
+  .search-box input {
+    border: none;
+    outline: none;
+    background: none;
+    flex: 1;
+    font-size: 14.5px;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+  }
+  .search-box input::placeholder { color: var(--muted); }
+  .search-box .ic { font-size: 16px; color: var(--muted); }
+  .search-clear {
+    border: none; background: none; color: var(--muted);
+    font-size: 18px; cursor: pointer; padding: 0 2px;
+  }
+
+  .popular-section { padding: 4px 16px 6px; }
+  .popular-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px; font-weight: 600;
+    margin: 6px 2px 10px;
+  }
+  .popular-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .popular-scroll::-webkit-scrollbar { display: none; }
+  .popular-card {
+    flex: 0 0 auto;
+    width: 128px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 12px;
+    box-shadow: 0 3px 14px rgba(200,29,42,0.06);
+  }
+  .popular-card .icon {
+    width: 100%; height: 60px;
+    border-radius: 12px;
+    background: #F4E9E2;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .popular-card .icon img { width: 100%; height: 100%; object-fit: cover; }
+  .popular-card .name { font-size: 12.5px; font-weight: 700; line-height: 1.3; min-height: 32px; }
+  .popular-card .price { font-size: 11.5px; color: var(--primary-dark); font-weight: 700; margin-top: 4px; }
+  .popular-card button {
+    width: 100%;
+    margin-top: 8px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
 
   .product-row {
     display: flex;
@@ -367,6 +443,15 @@
   </div>
 </header>
 
+<div class="search-wrap">
+  <div class="search-box">
+    <span class="ic">🔍</span>
+    <input id="searchInput" type="text" placeholder="Mahsulot qidirish..." oninput="onSearchInput()">
+    <button class="search-clear" id="searchClearBtn" style="display:none;" onclick="clearSearch()">✕</button>
+  </div>
+</div>
+
+<div id="popularSection"></div>
 <div class="crumbs" id="crumbs"></div>
 <div id="content"></div>
 
@@ -958,14 +1043,7 @@ const CATALOG = {
         bm_125760: { name: "SUPER MARLETTO KONTI SHOK 100.GR", unit: "dona", price: 0 },
         bm2_130250: { name: "Super kontik 100g", unit: "dona", price: 0 },
       }},
-      ermak: { name: "Ermak", icon: "🛒", products: {
-        bm_113710: { name: "Ermak, chakkadan dudlangan sutli qurt,60 gr 35 shtuk", unit: "dona", price: 0 },
-        bm_113720: { name: "Ermak, dudlangan sutli, polietilyen pakyet 30 g 50 shtuk", unit: "dona", price: 0 },
-        bm_113730: { name: "Ermak, qurt qatiqli 150 g 10sht", unit: "dona", price: 0 },
-        bm_113740: { name: "Ermak, kungaboqar qovurilgan Qora 200gr", unit: "dona", price: 0 },
-        bm_114410: { name: "ERMAK 47gr qurut 40sht", unit: "dona", price: 0 },
-        bm_114950: { name: "Ermak, Kungaboqar urug'i qovurilgan qora tuzlangan, pakyetda 160 gr 12sht", unit: "dona", price: 0 },
-      }},
+      
       umo: { name: "Umo", icon: "🛒", products: {
         bm_113480: { name: "Umo Ecopack", unit: "dona", price: 0 },
         bm_113490: { name: "Umo boss", unit: "dona", price: 0 },
@@ -2123,6 +2201,28 @@ const CATALOG = {
         bm_125670: { name: "Tuc smoced sausages flavor 100g", unit: "dona", price: 0 },
         bm2_134900: { name: "TUC sourcream&onion so vkusom smyetani i luka 100gr", unit: "dona", price: 0 },
       }},
+      ermak: { name: "Ermak", icon: "🌻", products: {
+        bm_113710: { name: "Ermak, chakkadan dudlangan sutli qurt,60 gr 35 shtuk", unit: "dona", price: 0 },
+        bm_113720: { name: "Ermak, dudlangan sutli, polietilyen pakyet 30 g 50 shtuk", unit: "dona", price: 0 },
+        bm_113730: { name: "Ermak, qurt qatiqli 150 g 10sht", unit: "dona", price: 0 },
+        bm_113740: { name: "Ermak, kungaboqar qovurilgan Qora 200gr", unit: "dona", price: 0 },
+        bm_114410: { name: "ERMAK 47gr qurut 40sht", unit: "dona", price: 0 },
+        bm_114950: { name: "Ermak, Kungaboqar urug'i qovurilgan qora tuzlangan, pakyetda 160 gr 12sht", unit: "dona", price: 0 },
+        ur_117860: { name: "Syemyechki Chyorniye s solyu 'Ermak' 100g 16 shtuk", unit: "dona", price: 0 },
+      }},
+      djinn: { name: "Djinn", icon: "🌻", products: {
+        bm_115190: { name: "Djinn, Tuzlanmagan 70 gramm", unit: "dona", price: 0 },
+        bm_115200: { name: "Djinn, Tuzlanmagan 140 gramm", unit: "dona", price: 0 },
+        bm_115210: { name: "Djinn, Tuzlangan 'Quyoshli yirik' 100 gramm", unit: "dona", price: 0 },
+        bm_115220: { name: "Djinn, Tuzlangan 'Quyoshli yirik' 200 gramm", unit: "dona", price: 0 },
+        bm_115350: { name: "Djinn, Tuzlanmagan 250 gramm", unit: "dona", price: 0 },
+        bm_116500: { name: "Djinn, Tuzlangan 70 gramm", unit: "dona", price: 0 },
+        bm_116510: { name: "Djinn, Tuzlanmagan 350 gramm", unit: "dona", price: 0 },
+        bm_116900: { name: "Djinn, Tuzlangan 140 gramm", unit: "dona", price: 0 },
+      }},
+      marvarid: { name: "Marvarid", icon: "🧀", products: {
+        bm_114280: { name: "Qurt Marvarid", unit: "dona", price: 0 },
+      }},
     }
   },
   bolalar_aksessuarlari: {
@@ -2144,6 +2244,191 @@ const CATALOG = {
       }},
     }
   },
+  sut_pishloq: {
+    name: "Pishloq va sut mahsulotlari", icon: "🧀",
+    products: {
+      bm_114370: { name: "PRESIDENT, 82% nordon sutli tuzlanmagan 200g", unit: "dona", price: 0 },
+      bm_115280: { name: "bio kefir MUSOFFO", unit: "dona", price: 0 },
+      bm_120130: { name: "Maslo slivoch. Laktyel 82%, 200gr", unit: "dona", price: 0 },
+      bm_122890: { name: "PRESIDENT, 82% nordon sutli tuzlanmagan 400g", unit: "dona", price: 0 },
+      bm_123370: { name: "Extra virgin olivka maslo 250ml", unit: "dona", price: 0 },
+      bm_123820: { name: "Milter, yog'liligi 85%, polipropilyen chyelak 0,9 kg", unit: "dona", price: 0 },
+      bm_123910: { name: "Farmer Slivochnoye Maslo 82,5% 200gr", unit: "dona", price: 0 },
+      bm2_126630: { name: "slivochnaya MU MU botonchik", unit: "dona", price: 0 },
+    }
+  },
+  konserva2: {
+    name: "Konservalar (qo'shimcha)", icon: "🥫",
+    products: {
+      bm_116070: { name: "Za rodina kilki tamat", unit: "dona", price: 0 },
+      bm_116080: { name: "Za rodina kilki ostri", unit: "dona", price: 0 },
+      bm_116880: { name: "RigaGold, shprot yog'li 240g", unit: "dona", price: 0 },
+      bm_123140: { name: "govyadina tushyenaya 325g Poyqadam", unit: "dona", price: 0 },
+      bm2_127130: { name: "Govyadina tushyenaya 'Dar Vostoka' iz kuskovogo myasa visshiy sort 400g", unit: "dona", price: 0 },
+      bm2_130840: { name: "Za Rodinu, Atlantika tabiy sardinasi, yog'da 185 gramm qalay bonka", unit: "dona", price: 0 },
+      bm2_134080: { name: "BALTIC SHPROT 270 GR", unit: "dona", price: 0 },
+      bm2_137040: { name: "shprot 160gr", unit: "dona", price: 0 },
+      bm2_138300: { name: "OSIYO Govyadina tushyenaya visshiy sort 325 gr", unit: "dona", price: 0 },
+      bm2_139080: { name: "ansor govyadina tushyenaya 325 g", unit: "dona", price: 0 },
+    }
+  },
+  tez_taom: {
+    name: "Tez tayyorlanadigan taomlar", icon: "🍜",
+    products: {
+      bm_113630: { name: "ROLLTON BULYoN tovuk", unit: "dona", price: 0 },
+      bm_113900: { name: "Big Bon, lapsha salsa tovuq lazzati bilan 75g", unit: "dona", price: 0 },
+      bm_114550: { name: "DOSHIRAK TOVUQ 90 gr latok", unit: "dona", price: 0 },
+      bm_114560: { name: "DOSHIRAK G'USH 90 gr latok", unit: "dona", price: 0 },
+      bm_125010: { name: "Bulon po domashnyemu s kurits. Maggi, 70gr", unit: "dona", price: 0 },
+      bm2_143640: { name: "Almero mm lapsha 168000", unit: "dona", price: 0 },
+    }
+  },
+  kakao_choy_kofe: {
+    name: "Kakao, choy va qahva (qo'shimcha)", icon: "☕",
+    products: {
+      bm_118260: { name: "GREEN TEA chay pakyet 100sht", unit: "dona", price: 0 },
+      bm_119410: { name: "jasobs orginal", unit: "dona", price: 0 },
+      bm_125280: { name: "Yakobs Monarx intyens stb 47.5", unit: "dona", price: 0 },
+      bm_125450: { name: "mc coffe", unit: "dona", price: 0 },
+      bm2_130170: { name: "jasobs lattye", unit: "dona", price: 0 },
+      bm2_132850: { name: "Biskvi kakao kryembyer 35g", unit: "dona", price: 0 },
+      bm2_136140: { name: "Grand mix kakao napitok 375gr", unit: "dona", price: 0 },
+      bm2_139650: { name: "Davidoff rich aroma", unit: "dona", price: 0 },
+      bm2_139670: { name: "CAFE EGOISTE PRIVATE 100GR S/B", unit: "dona", price: 0 },
+      bm2_143620: { name: "Tsikory poroshok 12sht*85gr", unit: "dona", price: 0 },
+      bm2_143630: { name: "Tsikoriy naturalniy proshkoobrazniy ' Dachniy syezon' 150 g 12 up v kor", unit: "dona", price: 0 },
+      bm2_144570: { name: "kakao vanil 300gr", unit: "dona", price: 0 },
+    }
+  },
+  urug_gazak2: {
+    name: "Urug' va popkorn", icon: "🍿",
+    products: {
+      bm_114070: { name: "mir cometica 501 semechka", unit: "dona", price: 0 },
+      bm_124410: { name: "Babkini, Tuzlangan qora pistachka 100 gr pachka", unit: "dona", price: 0 },
+      bm2_132030: { name: "ALGORITM YANGI 100GR tuzlangan", unit: "dona", price: 0 },
+      bm2_132040: { name: "ALGORITM YANGI 100GR tuzlanmagan", unit: "dona", price: 0 },
+      bm2_135500: { name: "Babkin tuz 240", unit: "dona", price: 0 },
+      bm2_136650: { name: "Pop korn rial amyerikan bonka 85 gr 4780040110261", unit: "dona", price: 0 },
+      bm2_136670: { name: "Popkorn Amyerikanskiy fruktoviy miks 150gr", unit: "dona", price: 0 },
+      bm2_136690: { name: "pop korn - Byez chaya ya skuchayu - amyerikanskiy s karamyelyu 150g", unit: "dona", price: 0 },
+      bm2_137730: { name: "MEGA 180 QORA", unit: "dona", price: 0 },
+      bm2_137740: { name: "MEGA 180 OQ", unit: "dona", price: 0 },
+      bm2_143860: { name: "Saber kakosli semichka 90g", unit: "dona", price: 0 },
+    }
+  },
+  bolalar_aksessuar2: {
+    name: "Bolalar aksessuarlari (qo'shimcha)", icon: "🍼",
+    products: {
+      bm2_140110: { name: "Dyetskaya butilka small baby,Mimiku 240ml", unit: "dona", price: 0 },
+      bm2_140120: { name: "Dyetskoye Butilka Algo 240ml", unit: "dona", price: 0 },
+      bm2_140140: { name: "ALGO SELEKON 270ML", unit: "dona", price: 0 },
+      bm2_140190: { name: "ALGO 180 ml / 6 oz", unit: "dona", price: 0 },
+      bm2_140250: { name: "ALGO 180 ml / 6 + m", unit: "dona", price: 0 },
+      bm2_140360: { name: "algo all love in algo", unit: "dona", price: 0 },
+      bm2_141120: { name: "Safety health butilka", unit: "dona", price: 0 },
+      bm2_141130: { name: "Safety health butilka 180 ml", unit: "dona", price: 0 },
+      bm2_141530: { name: "Butilka dyet. minitree 270ml", unit: "dona", price: 0 },
+      bm2_141540: { name: "Butilka 240 300ml", unit: "dona", price: 0 },
+      bm2_142360: { name: "Soska prozrachn. Saff/Tyeddi Djonsons, shtuka", unit: "dona", price: 0 },
+      bm2_142380: { name: "senior baby teethers", unit: "dona", price: 0 },
+      bm2_142390: { name: "ALGO features", unit: "dona", price: 0 },
+      bm2_142400: { name: "Mumlove Avto soska 1sht", unit: "dona", price: 0 },
+      bm2_142460: { name: "Flosher baby", unit: "dona", price: 0 },
+      bm2_142620: { name: "childrens shampoo brush", unit: "dona", price: 0 },
+      bm2_142660: { name: "baby fruit and vegetable nibbler", unit: "dona", price: 0 },
+      bm2_142670: { name: "baby multi purpose spoon", unit: "dona", price: 0 },
+      bm2_142700: { name: "soskaa 2 dona qora", unit: "dona", price: 0 },
+      bm2_142750: { name: "termos qizil sport", unit: "dona", price: 0 },
+      bm2_142960: { name: "TEDY SILICONE SPORK SET", unit: "dona", price: 0 },
+      bm2_144490: { name: "Dyetskaya Butilka Camere Plastikovaya 125ml", unit: "dona", price: 0 },
+    }
+  },
+  bolalar_gigiyena2: {
+    name: "Bolalar gigiyenasi (qo'shimcha)", icon: "🧷",
+    products: {
+      bm2_128280: { name: "Vlajnaya salfetka ''perla'' 120 sht", unit: "dona", price: 0 },
+      bm2_129940: { name: "chikako 3 (22)", unit: "dona", price: 0 },
+      bm2_130780: { name: "Smart Vlajniy salfyetka 120 sht", unit: "dona", price: 0 },
+      bm2_132670: { name: "CHIKAKO 7 14ShT", unit: "dona", price: 0 },
+      bm2_133650: { name: "Aydin Vlajniy salfetka 120sht", unit: "dona", price: 0 },
+      bm2_144330: { name: "Sudocrem bolalar", unit: "dona", price: 0 },
+    }
+  },
+  sirok_yogurt2: {
+    name: "Sirok turlari", icon: "🧀",
+    products: {
+      bm_119900: { name: "NA_Moloko sgushyennoye Doren 1000gr", unit: "dona", price: 0 },
+      bm_122270: { name: "Sgushyennoye moloko Doryeyen Don milko, 390gr", unit: "dona", price: 0 },
+      bm_123580: { name: "Sgushyenka s saxarom 8,5 % 370g zaryechiye", unit: "dona", price: 0 },
+      bm_123840: { name: "Sabushkin Sgushyenka varyenaya sirok 40g", unit: "dona", price: 0 },
+      bm_124820: { name: "MAGMILK SGUSHENKA 340 gr", unit: "dona", price: 0 },
+      bm2_126760: { name: "Plyush sirok v assar. 45gr", unit: "dona", price: 0 },
+      bm2_129620: { name: "sgushyenka Zaychik 950 g", unit: "dona", price: 0 },
+      bm2_129790: { name: "Mishanya tort vafyelniy 220g sgushyenoye moloko", unit: "dona", price: 0 },
+      bm2_134480: { name: "Sovushka sirok v assar. 40gr", unit: "dona", price: 0 },
+    }
+  },
+  saqich_konditer: {
+    name: "Saqich va qandolat mahsulotlari", icon: "🍬",
+    products: {
+      bm_120710: { name: "jvachka stix", unit: "dona", price: 0 },
+      bm_124610: { name: "Jyevatyelnaya iriska Mamba tropichyeskiy 79,5 gr", unit: "dona", price: 0 },
+      bm_125490: { name: "JYeVATYeLNAYa RYeZINKA '5' PEPPERMINT COBALT 15ShT", unit: "dona", price: 0 },
+      bm2_127670: { name: "Krut Frut marmyelad so vkusom klubniki 70gr", unit: "dona", price: 0 },
+      bm2_131620: { name: "BonPari, marmyelad yakkashoxlar shaharchasi 100g", unit: "dona", price: 0 },
+      bm2_134870: { name: "Jyevatyelnaya ryezinka 5 watermelon prism 15 sht", unit: "dona", price: 0 },
+      bm2_134920: { name: "Halls so vkusom myoda i limona 25g", unit: "dona", price: 0 },
+      bm2_137570: { name: "Kozinak tuzsiz", unit: "dona", price: 0 },
+      bm2_137580: { name: "Kozinak tuzli", unit: "dona", price: 0 },
+      bm2_137980: { name: "marmelad bon pari 75 gr", unit: "dona", price: 0 },
+      bm2_137990: { name: "marmelad bon pari jumble 40 gr", unit: "dona", price: 0 },
+      bm2_139220: { name: "Iris Kis Kis 1 kilogramm", unit: "dona", price: 0 },
+      bm2_141270: { name: "HALLS HONEY LEMON 25.2 GR", unit: "dona", price: 0 },
+      bm2_144260: { name: "Hit iris 500gr", unit: "dona", price: 0 },
+    }
+  },
+  shokolad_konfet2: {
+    name: "Shokolad va konfet (qo'shimcha)", icon: "🍫",
+    products: {
+      bm_115440: { name: "snikers 0.5 kg", unit: "dona", price: 0 },
+      bm_117330: { name: "GOODMIX BATONChIK 29 g", unit: "dona", price: 0 },
+      bm_118780: { name: "Milka Bonibo 36g", unit: "dona", price: 0 },
+      bm_119350: { name: "Shokoladniy batonchik Twix ekstra 82gr", unit: "dona", price: 0 },
+      bm_119470: { name: "Shokolad s oryexom Toffifee lyesnoy oryex v myatoy 125 gr", unit: "dona", price: 0 },
+      bm_121670: { name: "Spryed Shyedroye lyeto shokoladno-oryexoviy vkus 59% 200g", unit: "dona", price: 0 },
+      bm_122470: { name: "Kommunarka shokolad tyemniy 200 gr", unit: "dona", price: 0 },
+      bm_122580: { name: "Styep shokolad araxis i karamyel 90gr", unit: "dona", price: 0 },
+      bm_122810: { name: "Xrutka molochniy shokolad s xrustyashkimi sharikami 88gr", unit: "dona", price: 0 },
+      bm_123240: { name: "Kyent trix shokoladnaya pasta 56gr", unit: "dona", price: 0 },
+      bm_123600: { name: "Krasniy Oktyabr Alyonka 1kg", unit: "dona", price: 0 },
+      bm_123610: { name: "AVAL ALYONKA 1KG", unit: "dona", price: 0 },
+      bm_123620: { name: "ALYONKA KREM BRYULE", unit: "dona", price: 0 },
+      bm_123720: { name: "Chuppy, karamyel konfyetlar tayoqchada, plastik banka 120 dona 10 g. dan", unit: "dona", price: 0 },
+      bm_124460: { name: "Kommunarka shokolad araxisovaya pasta 200gr", unit: "dona", price: 0 },
+      bm_124670: { name: "Shokoladniy batonchik Snickers Super 95gr", unit: "dona", price: 0 },
+      bm_125390: { name: "archyello shokolad 30gr", unit: "dona", price: 0 },
+      bm_125630: { name: "Yashikino Konfyeti vyesoviye «Zolotaya stryekoza 500gr", unit: "dona", price: 0 },
+      bm_125830: { name: "YaK538 Konfyeti Byelaya chyeryemuxa/500g", unit: "dona", price: 0 },
+      bm2_127400: { name: "Rotfront batonchik", unit: "dona", price: 0 },
+      bm2_127630: { name: "Kit kat 500 GR", unit: "dona", price: 0 },
+      bm2_128800: { name: "batonchik 1kg", unit: "dona", price: 0 },
+      bm2_130690: { name: "KZ1389 SPRINT batonchik (myedvyed) 50g", unit: "dona", price: 0 },
+      bm2_137030: { name: "Koktel 1l shkolad", unit: "dona", price: 0 },
+      bm2_137930: { name: "Babayevskiy shkolad gorkiy 75gr", unit: "dona", price: 0 },
+      bm2_139440: { name: "love is konfet kvadrat", unit: "dona", price: 0 },
+      bm2_139910: { name: "SHOK FERRERO ROCHER HASELNUSS WEISS 90 GR", unit: "dona", price: 0 },
+      bm2_141390: { name: "Rafaello 3*90gr=270gr", unit: "dona", price: 0 },
+      bm2_144320: { name: "twix 46gr", unit: "dona", price: 0 },
+      bm2_144540: { name: "Milka 90g", unit: "dona", price: 0 },
+    }
+  },
+  moy_yog: {
+    name: "Moy", icon: "🫒",
+    products: {
+      bm_122380: { name: "Olivki byez kost. Oazis Advans, 280gr", unit: "dona", price: 0 },
+      bm2_144670: { name: "Kent Boringer Olive Pomace Oil obyemom 250 ml.", unit: "dona", price: 0 },
+    }
+  },
   boshqa_mahsulotlar: {
     name: "Boshqa mahsulotlar", icon: "📦",
     products: {
@@ -2156,21 +2441,14 @@ const CATALOG = {
       bm_112270: { name: "Tic Tac Tstrus", unit: "dona", price: 0 },
       bm_113510: { name: "Bakerdream, 100 gr.", unit: "dona", price: 0 },
       bm_113530: { name: "Bekordrem 500 gr", unit: "dona", price: 0 },
-      bm_113630: { name: "ROLLTON BULYoN tovuk", unit: "dona", price: 0 },
       bm_113650: { name: "nesquit mix", unit: "dona", price: 0 },
       bm_113840: { name: "Gorilla, Klassichyeskaya KZ, Tyemir banka 0,45 l", unit: "dona", price: 0 },
-      bm_113900: { name: "Big Bon, lapsha salsa tovuq lazzati bilan 75g", unit: "dona", price: 0 },
       bm_114030: { name: "paket 5 kg 100 dona", unit: "dona", price: 0 },
       bm_114040: { name: "paket 10 kg 50 dona", unit: "dona", price: 0 },
       bm_114050: { name: "paket 3 kg 100 dona", unit: "dona", price: 0 },
       bm_114060: { name: "MAXSIMUSS PAKET 501", unit: "dona", price: 0 },
-      bm_114070: { name: "mir cometica 501 semechka", unit: "dona", price: 0 },
       bm_114160: { name: "bondi 621", unit: "dona", price: 0 },
-      bm_114280: { name: "Qurt Marvarid", unit: "dona", price: 0 },
       bm_114350: { name: "Sardor turbuchka", unit: "dona", price: 0 },
-      bm_114370: { name: "PRESIDENT, 82% nordon sutli tuzlanmagan 200g", unit: "dona", price: 0 },
-      bm_114550: { name: "DOSHIRAK TOVUQ 90 gr latok", unit: "dona", price: 0 },
-      bm_114560: { name: "DOSHIRAK G'USH 90 gr latok", unit: "dona", price: 0 },
       bm_114570: { name: "Millky Way 21.5", unit: "dona", price: 0 },
       bm_114610: { name: "XAM XAM", unit: "dona", price: 0 },
       bm_114750: { name: "Sfad, eruvchan, bolalar uchun, PP pakyet 180 g", unit: "dona", price: 0 },
@@ -2178,125 +2456,67 @@ const CATALOG = {
       bm_114870: { name: "Yu@me", unit: "dona", price: 0 },
       bm_114910: { name: "MENTOLIS KONGO", unit: "dona", price: 0 },
       bm_115150: { name: "BELAKT 6-12", unit: "dona", price: 0 },
-      bm_115190: { name: "Djinn, Tuzlanmagan 70 gramm", unit: "dona", price: 0 },
-      bm_115200: { name: "Djinn, Tuzlanmagan 140 gramm", unit: "dona", price: 0 },
-      bm_115210: { name: "Djinn, Tuzlangan 'Quyoshli yirik' 100 gramm", unit: "dona", price: 0 },
-      bm_115220: { name: "Djinn, Tuzlangan 'Quyoshli yirik' 200 gramm", unit: "dona", price: 0 },
-      bm_115280: { name: "bio kefir MUSOFFO", unit: "dona", price: 0 },
-      bm_115350: { name: "Djinn, Tuzlanmagan 250 gramm", unit: "dona", price: 0 },
-      bm_115440: { name: "snikers 0.5 kg", unit: "dona", price: 0 },
       bm_115520: { name: "Snekers 2 75 gr p", unit: "dona", price: 0 },
       bm_115680: { name: "JAFFA SAKE GILOS", unit: "dona", price: 0 },
       bm_115800: { name: "vafli orex 200gr", unit: "dona", price: 0 },
-      bm_116070: { name: "Za rodina kilki tamat", unit: "dona", price: 0 },
-      bm_116080: { name: "Za rodina kilki ostri", unit: "dona", price: 0 },
       bm_116250: { name: "mazalak 3 300gr", unit: "dona", price: 0 },
       bm_116490: { name: "supreme 0-12", unit: "dona", price: 0 },
-      bm_116500: { name: "Djinn, Tuzlangan 70 gramm", unit: "dona", price: 0 },
-      bm_116510: { name: "Djinn, Tuzlanmagan 350 gramm", unit: "dona", price: 0 },
       bm_116700: { name: "YIPPY RED BERRIES 0.33", unit: "dona", price: 0 },
       bm_116710: { name: "YIPPY OLMA 0.33ml", unit: "dona", price: 0 },
       bm_116790: { name: "Stix ice mint", unit: "dona", price: 0 },
       bm_116840: { name: "Ne'mat, Tuzlangan,shisha banka 1,0 l. burama qopqoqli", unit: "dona", price: 0 },
-      bm_116880: { name: "RigaGold, shprot yog'li 240g", unit: "dona", price: 0 },
-      bm_116900: { name: "Djinn, Tuzlangan 140 gramm", unit: "dona", price: 0 },
       bm_117020: { name: "Heinz, Olma,qulupnay,donli pyurye 6+ 90 gramm d/p", unit: "dona", price: 0 },
-      bm_117330: { name: "GOODMIX BATONChIK 29 g", unit: "dona", price: 0 },
       bm_117470: { name: "Humana smes expert anticolic 300gr AC", unit: "dona", price: 0 },
       bm_117510: { name: "rolton katta", unit: "dona", price: 0 },
       bm_118200: { name: "banoffy 10sht", unit: "dona", price: 0 },
-      bm_118260: { name: "GREEN TEA chay pakyet 100sht", unit: "dona", price: 0 },
-      bm_118780: { name: "Milka Bonibo 36g", unit: "dona", price: 0 },
       bm_119250: { name: "Konina Osiyo 325gr", unit: "dona", price: 0 },
-      bm_119350: { name: "Shokoladniy batonchik Twix ekstra 82gr", unit: "dona", price: 0 },
-      bm_119410: { name: "jasobs orginal", unit: "dona", price: 0 },
-      bm_119470: { name: "Shokolad s oryexom Toffifee lyesnoy oryex v myatoy 125 gr", unit: "dona", price: 0 },
       bm_119750: { name: "Swett Baby 6(12)", unit: "dona", price: 0 },
-      bm_119900: { name: "NA_Moloko sgushyennoye Doren 1000gr", unit: "dona", price: 0 },
       bm_119930: { name: "xrustoff Ryobrishki grill", unit: "dona", price: 0 },
       bm_120020: { name: "Mini pay 360 gr", unit: "dona", price: 0 },
-      bm_120130: { name: "Maslo slivoch. Laktyel 82%, 200gr", unit: "dona", price: 0 },
       bm_120430: { name: "Myedunok s Oryexom 1 kg", unit: "dona", price: 0 },
-      bm_120710: { name: "jvachka stix", unit: "dona", price: 0 },
       bm_120800: { name: "Immunis 3 300gr", unit: "dona", price: 0 },
-      bm_121670: { name: "Spryed Shyedroye lyeto shokoladno-oryexoviy vkus 59% 200g", unit: "dona", price: 0 },
       bm_121710: { name: "Bakerdream, 15 gr.", unit: "dona", price: 0 },
       bm_122090: { name: "Smyes suxaya molochnaya Friso Gold 2 LockNutri dlya dyetyey s 6 do 12 myesyatsyev 400gr", unit: "dona", price: 0 },
-      bm_122270: { name: "Sgushyennoye moloko Doryeyen Don milko, 390gr", unit: "dona", price: 0 },
       bm_122280: { name: "Doreen Sgushyonnoye mooloko 500gr", unit: "dona", price: 0 },
-      bm_122380: { name: "Olivki byez kost. Oazis Advans, 280gr", unit: "dona", price: 0 },
-      bm_122470: { name: "Kommunarka shokolad tyemniy 200 gr", unit: "dona", price: 0 },
       bm_122540: { name: "Azbuka sokcha", unit: "dona", price: 0 },
-      bm_122580: { name: "Styep shokolad araxis i karamyel 90gr", unit: "dona", price: 0 },
       bm_122610: { name: "good day sariq", unit: "dona", price: 0 },
       bm_122620: { name: "good day ko`k", unit: "dona", price: 0 },
-      bm_122810: { name: "Xrutka molochniy shokolad s xrustyashkimi sharikami 88gr", unit: "dona", price: 0 },
       bm_122840: { name: "Best qurt", unit: "dona", price: 0 },
-      bm_122890: { name: "PRESIDENT, 82% nordon sutli tuzlanmagan 400g", unit: "dona", price: 0 },
       bm_123010: { name: "Vafli Hazel funduk Kryembyer 255g", unit: "dona", price: 0 },
-      bm_123140: { name: "govyadina tushyenaya 325g Poyqadam", unit: "dona", price: 0 },
-      bm_123240: { name: "Kyent trix shokoladnaya pasta 56gr", unit: "dona", price: 0 },
       bm_123250: { name: "KENT PASTA HAZELNUT CREAM COCOA 400GR", unit: "dona", price: 0 },
       bm_123310: { name: "frutto nyanya 12+yabloko kukuruz malina", unit: "dona", price: 0 },
-      bm_123370: { name: "Extra virgin olivka maslo 250ml", unit: "dona", price: 0 },
       bm_123400: { name: "paket 3 kg", unit: "dona", price: 0 },
       bm_123440: { name: "paket 5kg", unit: "dona", price: 0 },
       bm_123530: { name: "dubay plitka", unit: "dona", price: 0 },
       bm_123560: { name: "JOVI apelsin jeleli glazurlangan keks 180gr", unit: "dona", price: 0 },
-      bm_123580: { name: "Sgushyenka s saxarom 8,5 % 370g zaryechiye", unit: "dona", price: 0 },
-      bm_123600: { name: "Krasniy Oktyabr Alyonka 1kg", unit: "dona", price: 0 },
-      bm_123610: { name: "AVAL ALYONKA 1KG", unit: "dona", price: 0 },
-      bm_123620: { name: "ALYONKA KREM BRYULE", unit: "dona", price: 0 },
       bm_123660: { name: "chokolabon 1kg", unit: "dona", price: 0 },
-      bm_123720: { name: "Chuppy, karamyel konfyetlar tayoqchada, plastik banka 120 dona 10 g. dan", unit: "dona", price: 0 },
       bm_123760: { name: "Paket 10 kg oq", unit: "dona", price: 0 },
-      bm_123820: { name: "Milter, yog'liligi 85%, polipropilyen chyelak 0,9 kg", unit: "dona", price: 0 },
-      bm_123840: { name: "Sabushkin Sgushyenka varyenaya sirok 40g", unit: "dona", price: 0 },
-      bm_123910: { name: "Farmer Slivochnoye Maslo 82,5% 200gr", unit: "dona", price: 0 },
       bm_124080: { name: "Chyernogalovka pyurye fruktoviy salatik", unit: "dona", price: 0 },
       bm_124100: { name: "Veranda masks 250ml", unit: "dona", price: 0 },
       bm_124140: { name: "Nyam nyamka", unit: "dona", price: 0 },
       bm_124210: { name: "Biskvitniye oladi Pankie mini miks vkusov 144gr", unit: "dona", price: 0 },
-      bm_124410: { name: "Babkini, Tuzlangan qora pistachka 100 gr pachka", unit: "dona", price: 0 },
-      bm_124460: { name: "Kommunarka shokolad araxisovaya pasta 200gr", unit: "dona", price: 0 },
       bm_124480: { name: "BRAVO KEKS", unit: "dona", price: 0 },
       bm_124490: { name: "Ulker, assorti 1 kg p/p", unit: "dona", price: 0 },
       bm_124550: { name: "Tsukyerki juvalni Mamba Asorti 79,5g", unit: "dona", price: 0 },
-      bm_124610: { name: "Jyevatyelnaya iriska Mamba tropichyeskiy 79,5 gr", unit: "dona", price: 0 },
-      bm_124670: { name: "Shokoladniy batonchik Snickers Super 95gr", unit: "dona", price: 0 },
       bm_124780: { name: "Marande qopqoq", unit: "dona", price: 0 },
-      bm_124820: { name: "MAGMILK SGUSHENKA 340 gr", unit: "dona", price: 0 },
       bm_124880: { name: "Mix qurt", unit: "dona", price: 0 },
       bm_124920: { name: "TIC TAC Fruktoviy Miks T1x24x12 NEW", unit: "dona", price: 0 },
       bm_124970: { name: "samara slifka", unit: "dona", price: 0 },
-      bm_125010: { name: "Bulon po domashnyemu s kurits. Maggi, 70gr", unit: "dona", price: 0 },
       bm_125060: { name: "CHINAR QURT", unit: "dona", price: 0 },
       bm_125260: { name: "Actiimel so vkusom klubnika shipovnik zyemlyanika 95gr", unit: "dona", price: 0 },
-      bm_125280: { name: "Yakobs Monarx intyens stb 47.5", unit: "dona", price: 0 },
-      bm_125390: { name: "archyello shokolad 30gr", unit: "dona", price: 0 },
-      bm_125450: { name: "mc coffe", unit: "dona", price: 0 },
       bm_125460: { name: "5 sochniy arbuz", unit: "dona", price: 0 },
       bm_125470: { name: "5 svyejaya myata", unit: "dona", price: 0 },
       bm_125480: { name: "5 sladkiye yagodi", unit: "dona", price: 0 },
-      bm_125490: { name: "JYeVATYeLNAYa RYeZINKA '5' PEPPERMINT COBALT 15ShT", unit: "dona", price: 0 },
       bm_125590: { name: "MAX FUN YASHIL", unit: "dona", price: 0 },
-      bm_125630: { name: "Yashikino Konfyeti vyesoviye «Zolotaya stryekoza 500gr", unit: "dona", price: 0 },
-      bm_125830: { name: "YaK538 Konfyeti Byelaya chyeryemuxa/500g", unit: "dona", price: 0 },
       bm_126020: { name: "belakt 12plus 600gr", unit: "dona", price: 0 },
       bm_126080: { name: "fayf yashil", unit: "dona", price: 0 },
       bm_126090: { name: "Bondu qurut", unit: "dona", price: 0 },
-      bm2_126630: { name: "slivochnaya MU MU botonchik", unit: "dona", price: 0 },
-      bm2_126760: { name: "Plyush sirok v assar. 45gr", unit: "dona", price: 0 },
       bm2_126810: { name: "you ananas", unit: "dona", price: 0 },
       bm2_126980: { name: "Alif, Saqich Sweet Berry tamli 2.7 g., myetall qog'ozli o'ram", unit: "dona", price: 0 },
-      bm2_127130: { name: "Govyadina tushyenaya 'Dar Vostoka' iz kuskovogo myasa visshiy sort 400g", unit: "dona", price: 0 },
       bm2_127320: { name: "TUSA XRUSTOFF ShAShLIK 485GR", unit: "dona", price: 0 },
       bm2_127330: { name: "TUSA XRUSTOFF SALYaMI 485GR", unit: "dona", price: 0 },
       bm2_127380: { name: "Neaquik Wfes zavtrak210gr", unit: "dona", price: 0 },
-      bm2_127400: { name: "Rotfront batonchik", unit: "dona", price: 0 },
       bm2_127410: { name: "Takf nejenka", unit: "dona", price: 0 },
-      bm2_127630: { name: "Kit kat 500 GR", unit: "dona", price: 0 },
-      bm2_127670: { name: "Krut Frut marmyelad so vkusom klubniki 70gr", unit: "dona", price: 0 },
       bm2_127720: { name: "GERKULES YANGI", unit: "dona", price: 0 },
       bm2_127750: { name: "Chio rio, bon taym, supyer yarchye", unit: "dona", price: 0 },
       bm2_127870: { name: "DOLORES 205 GR", unit: "dona", price: 0 },
@@ -2304,25 +2524,16 @@ const CATALOG = {
       bm2_127980: { name: "PAKYeT 3KG 75ShT", unit: "dona", price: 0 },
       bm2_128230: { name: "Rodeo 500 gr", unit: "dona", price: 0 },
       bm2_128260: { name: "PYeRLA vlajnaya solfyetka 120sht", unit: "dona", price: 0 },
-      bm2_128280: { name: "Vlajnaya salfetka ''perla'' 120 sht", unit: "dona", price: 0 },
       bm2_128440: { name: "Chupa-chups koktelniy 1kg", unit: "dona", price: 0 },
-      bm2_128800: { name: "batonchik 1kg", unit: "dona", price: 0 },
       bm2_129020: { name: "Pabeda Charjed Shkolat kg", unit: "dona", price: 0 },
       bm2_129130: { name: "Chaykovskiy saxar Kuskovoy 500gr", unit: "dona", price: 0 },
       bm2_129150: { name: "Mini oryeo 100 gr", unit: "dona", price: 0 },
-      bm2_129620: { name: "sgushyenka Zaychik 950 g", unit: "dona", price: 0 },
       bm2_129780: { name: "lemer vafelnie so vkusom kokosa 255gr", unit: "dona", price: 0 },
-      bm2_129790: { name: "Mishanya tort vafyelniy 220g sgushyenoye moloko", unit: "dona", price: 0 },
-      bm2_129940: { name: "chikako 3 (22)", unit: "dona", price: 0 },
-      bm2_130170: { name: "jasobs lattye", unit: "dona", price: 0 },
       bm2_130230: { name: "nemat 0.7 bodring", unit: "dona", price: 0 },
       bm2_130440: { name: "Karamyel Moskvichka Rotfront 1kg", unit: "dona", price: 0 },
       bm2_130560: { name: "XRUTKA, 650 gr", unit: "dona", price: 0 },
       bm2_130670: { name: "SMART FORMULA PROTEIN BANAN 40 G", unit: "dona", price: 0 },
-      bm2_130690: { name: "KZ1389 SPRINT batonchik (myedvyed) 50g", unit: "dona", price: 0 },
       bm2_130770: { name: "Marsianka, Syemifryedo 1 kg p/p", unit: "dona", price: 0 },
-      bm2_130780: { name: "Smart Vlajniy salfyetka 120 sht", unit: "dona", price: 0 },
-      bm2_130840: { name: "Za Rodinu, Atlantika tabiy sardinasi, yog'da 185 gramm qalay bonka", unit: "dona", price: 0 },
       bm2_130860: { name: "Kukruz", unit: "dona", price: 0 },
       bm2_130930: { name: "Komilfo fistvshka 102gr", unit: "dona", price: 0 },
       bm2_130940: { name: "Komilfo mindal 102gr", unit: "dona", price: 0 },
@@ -2333,100 +2544,57 @@ const CATALOG = {
       bm2_131400: { name: "Xrustoff Tusa so vkusom sir 485gr", unit: "dona", price: 0 },
       bm2_131460: { name: "frukto", unit: "dona", price: 0 },
       bm2_131470: { name: "frukto 111", unit: "dona", price: 0 },
-      bm2_131620: { name: "BonPari, marmyelad yakkashoxlar shaharchasi 100g", unit: "dona", price: 0 },
       bm2_131680: { name: "Savinov xit araxis", unit: "dona", price: 0 },
       bm2_131720: { name: "Rastishka, myevali smussi 85g", unit: "dona", price: 0 },
-      bm2_132030: { name: "ALGORITM YANGI 100GR tuzlangan", unit: "dona", price: 0 },
-      bm2_132040: { name: "ALGORITM YANGI 100GR tuzlanmagan", unit: "dona", price: 0 },
       bm2_132370: { name: "FRUKTOShKI PYuRYe DYeTSKOYe 90G", unit: "dona", price: 0 },
-      bm2_132670: { name: "CHIKAKO 7 14ShT", unit: "dona", price: 0 },
       bm2_132750: { name: "MALINA LIMON HI FOOD", unit: "dona", price: 0 },
-      bm2_132850: { name: "Biskvi kakao kryembyer 35g", unit: "dona", price: 0 },
       bm2_133060: { name: "Kindr qorbobo", unit: "dona", price: 0 },
       bm2_133070: { name: "Veranda ananas 565gr", unit: "dona", price: 0 },
       bm2_133190: { name: "Dvoryanka 1kg", unit: "dona", price: 0 },
       bm2_133200: { name: "Top shlop 1kg", unit: "dona", price: 0 },
       bm2_133260: { name: "0003 fendo marsio chocaolate", unit: "dona", price: 0 },
       bm2_133380: { name: "Gold Mod 120", unit: "dona", price: 0 },
-      bm2_133650: { name: "Aydin Vlajniy salfetka 120sht", unit: "dona", price: 0 },
       bm2_133790: { name: "Batsam 3B1", unit: "dona", price: 0 },
-      bm2_134080: { name: "BALTIC SHPROT 270 GR", unit: "dona", price: 0 },
       bm2_134150: { name: "ZEFIR BELUCCI 160gr", unit: "dona", price: 0 },
       bm2_134180: { name: "Baton 1kg", unit: "dona", price: 0 },
       bm2_134210: { name: "babyfoks", unit: "dona", price: 0 },
       bm2_134220: { name: "babyfoks karamel", unit: "dona", price: 0 },
       bm2_134410: { name: "Xot lanch govyajiy s sousom, 90gr stakan", unit: "dona", price: 0 },
-      bm2_134480: { name: "Sovushka sirok v assar. 40gr", unit: "dona", price: 0 },
       bm2_134650: { name: "Bonaffy 20g", unit: "dona", price: 0 },
       bm2_134660: { name: "Banoffy 20gr", unit: "dona", price: 0 },
-      bm2_134870: { name: "Jyevatyelnaya ryezinka 5 watermelon prism 15 sht", unit: "dona", price: 0 },
-      bm2_134920: { name: "Halls so vkusom myoda i limona 25g", unit: "dona", price: 0 },
       bm2_135170: { name: "Handa", unit: "dona", price: 0 },
       bm2_135340: { name: "Nutricia InfAtrini konserva 400gr", unit: "dona", price: 0 },
-      bm2_135500: { name: "Babkin tuz 240", unit: "dona", price: 0 },
-      bm2_136140: { name: "Grand mix kakao napitok 375gr", unit: "dona", price: 0 },
-      bm2_136650: { name: "Pop korn rial amyerikan bonka 85 gr 4780040110261", unit: "dona", price: 0 },
-      bm2_136670: { name: "Popkorn Amyerikanskiy fruktoviy miks 150gr", unit: "dona", price: 0 },
-      bm2_136690: { name: "pop korn - Byez chaya ya skuchayu - amyerikanskiy s karamyelyu 150g", unit: "dona", price: 0 },
       bm2_136780: { name: "Pyurye Gryechnyevo-risovaya", unit: "dona", price: 0 },
       bm2_136830: { name: "Konbiotik 1", unit: "dona", price: 0 },
-      bm2_137030: { name: "Koktel 1l shkolad", unit: "dona", price: 0 },
-      bm2_137040: { name: "shprot 160gr", unit: "dona", price: 0 },
       bm2_137540: { name: "Sgushyonochka s Saxarom Zaryechye 370gr", unit: "dona", price: 0 },
       bm2_137560: { name: "NESKUIK 200 banan", unit: "dona", price: 0 },
-      bm2_137570: { name: "Kozinak tuzsiz", unit: "dona", price: 0 },
-      bm2_137580: { name: "Kozinak tuzli", unit: "dona", price: 0 },
-      bm2_137730: { name: "MEGA 180 QORA", unit: "dona", price: 0 },
-      bm2_137740: { name: "MEGA 180 OQ", unit: "dona", price: 0 },
       bm2_137760: { name: "BAM BOO NEE KOK", unit: "dona", price: 0 },
       bm2_137800: { name: "sgushyonoye moloko zaryechiye1,5kg", unit: "dona", price: 0 },
-      bm2_137930: { name: "Babayevskiy shkolad gorkiy 75gr", unit: "dona", price: 0 },
       bm2_137940: { name: "Babayevskiy s", unit: "dona", price: 0 },
-      bm2_137980: { name: "marmelad bon pari 75 gr", unit: "dona", price: 0 },
-      bm2_137990: { name: "marmelad bon pari jumble 40 gr", unit: "dona", price: 0 },
       bm2_138000: { name: "Neskuik 200 kulibnika", unit: "dona", price: 0 },
       bm2_138220: { name: "ESSEN SLIVICHNI 500GR", unit: "dona", price: 0 },
       bm2_138260: { name: "aliyonka shikalat 90gr", unit: "dona", price: 0 },
-      bm2_138300: { name: "OSIYO Govyadina tushyenaya visshiy sort 325 gr", unit: "dona", price: 0 },
-      bm2_139080: { name: "ansor govyadina tushyenaya 325 g", unit: "dona", price: 0 },
       bm2_139140: { name: "Kash risovaya 200g", unit: "dona", price: 0 },
-      bm2_139220: { name: "Iris Kis Kis 1 kilogramm", unit: "dona", price: 0 },
       bm2_139250: { name: "Koktel kulibnika 1l", unit: "dona", price: 0 },
       bm2_139310: { name: "kiki riki toyboks", unit: "dona", price: 0 },
       bm2_139330: { name: "SARIQ BOLA panda TOY BOX", unit: "dona", price: 0 },
       bm2_139340: { name: "Nabor igrushyek Minon malyenkiy, sht", unit: "dona", price: 0 },
       bm2_139360: { name: "dippo sornyet katta", unit: "dona", price: 0 },
       bm2_139420: { name: "FIVE ORIGINAL 40G", unit: "dona", price: 0 },
-      bm2_139440: { name: "love is konfet kvadrat", unit: "dona", price: 0 },
       bm2_139450: { name: "love is Dumaloq", unit: "dona", price: 0 },
       bm2_139460: { name: "Morojnoe suxoy 0.2", unit: "dona", price: 0 },
       bm2_139470: { name: "morojnoe suxoe 0.3", unit: "dona", price: 0 },
-      bm2_139650: { name: "Davidoff rich aroma", unit: "dona", price: 0 },
-      bm2_139670: { name: "CAFE EGOISTE PRIVATE 100GR S/B", unit: "dona", price: 0 },
       bm2_139780: { name: "DAVIVDOFF ESPRESSO 57 DARK&CHOCALATE 100g", unit: "dona", price: 0 },
-      bm2_139910: { name: "SHOK FERRERO ROCHER HASELNUSS WEISS 90 GR", unit: "dona", price: 0 },
       bm2_139990: { name: "BONDI PYURE ASSARTI 90gr", unit: "dona", price: 0 },
-      bm2_140110: { name: "Dyetskaya butilka small baby,Mimiku 240ml", unit: "dona", price: 0 },
-      bm2_140120: { name: "Dyetskoye Butilka Algo 240ml", unit: "dona", price: 0 },
-      bm2_140140: { name: "ALGO SELEKON 270ML", unit: "dona", price: 0 },
       bm2_140150: { name: "TEDYDY 240 ML BPA FREE", unit: "dona", price: 0 },
       bm2_140170: { name: "Only beby 240 ML BPA", unit: "dona", price: 0 },
       bm2_140180: { name: "Only beby 120ML BPA", unit: "dona", price: 0 },
-      bm2_140190: { name: "ALGO 180 ml / 6 oz", unit: "dona", price: 0 },
       bm2_140230: { name: "Fish PP 330 ml", unit: "dona", price: 0 },
       bm2_140240: { name: "Fish PP 210ml", unit: "dona", price: 0 },
-      bm2_140250: { name: "ALGO 180 ml / 6 + m", unit: "dona", price: 0 },
       bm2_140290: { name: "Doudaner 150 ml", unit: "dona", price: 0 },
-      bm2_140360: { name: "algo all love in algo", unit: "dona", price: 0 },
       bm2_141000: { name: "Baby bottle brush set", unit: "dona", price: 0 },
-      bm2_141120: { name: "Safety health butilka", unit: "dona", price: 0 },
-      bm2_141130: { name: "Safety health butilka 180 ml", unit: "dona", price: 0 },
-      bm2_141270: { name: "HALLS HONEY LEMON 25.2 GR", unit: "dona", price: 0 },
       bm2_141360: { name: "BUCHERON GRAND CRU PLITKA 100GR", unit: "dona", price: 0 },
-      bm2_141390: { name: "Rafaello 3*90gr=270gr", unit: "dona", price: 0 },
       bm2_141500: { name: "BOLCI SHOK FISTASHKALIK 30 GR DUBAI", unit: "dona", price: 0 },
-      bm2_141530: { name: "Butilka dyet. minitree 270ml", unit: "dona", price: 0 },
-      bm2_141540: { name: "Butilka 240 300ml", unit: "dona", price: 0 },
       bm2_141760: { name: "Bonpari 200 gr zaftrik", unit: "dona", price: 0 },
       bm2_141810: { name: "Dubai pistachio 200gr", unit: "dona", price: 0 },
       bm2_141850: { name: "KINDIR ZOOBA ZOOMIX TOYS", unit: "dona", price: 0 },
@@ -2434,29 +2602,18 @@ const CATALOG = {
       bm2_142280: { name: "lastochka 1kg", unit: "dona", price: 0 },
       bm2_142290: { name: "Babaevskiy shok vkus kg", unit: "dona", price: 0 },
       bm2_142300: { name: "Mama priexala 500 gr", unit: "dona", price: 0 },
-      bm2_142360: { name: "Soska prozrachn. Saff/Tyeddi Djonsons, shtuka", unit: "dona", price: 0 },
-      bm2_142380: { name: "senior baby teethers", unit: "dona", price: 0 },
-      bm2_142390: { name: "ALGO features", unit: "dona", price: 0 },
-      bm2_142400: { name: "Mumlove Avto soska 1sht", unit: "dona", price: 0 },
       bm2_142430: { name: "ultra air nigttime", unit: "dona", price: 0 },
       bm2_142440: { name: "ultra air nigttime {L}", unit: "dona", price: 0 },
       bm2_142450: { name: "ultra air nigttime {M}", unit: "dona", price: 0 },
-      bm2_142460: { name: "Flosher baby", unit: "dona", price: 0 },
       bm2_142510: { name: "Sipochka derjatel mumlove", unit: "dona", price: 0 },
       bm2_142570: { name: "sut idish", unit: "dona", price: 0 },
       bm2_142590: { name: "Pingvin to'qima univyersal o'lchami 37sm x 26sm", unit: "dona", price: 0 },
-      bm2_142620: { name: "childrens shampoo brush", unit: "dona", price: 0 },
       bm2_142630: { name: "baby fruit and vegetable", unit: "dona", price: 0 },
       bm2_142650: { name: "Coska frukt Fish", unit: "dona", price: 0 },
-      bm2_142660: { name: "baby fruit and vegetable nibbler", unit: "dona", price: 0 },
-      bm2_142670: { name: "baby multi purpose spoon", unit: "dona", price: 0 },
       bm2_142680: { name: "gentle bites", unit: "dona", price: 0 },
-      bm2_142700: { name: "soskaa 2 dona qora", unit: "dona", price: 0 },
       bm2_142720: { name: "xikeer", unit: "dona", price: 0 },
-      bm2_142750: { name: "termos qizil sport", unit: "dona", price: 0 },
       bm2_142910: { name: "Korovka s apelsinivie 152g", unit: "dona", price: 0 },
       bm2_142920: { name: "Korovka ovsyanniy 160gr", unit: "dona", price: 0 },
-      bm2_142960: { name: "TEDY SILICONE SPORK SET", unit: "dona", price: 0 },
       bm2_142990: { name: "TROYNOY KOMFORT 400GR", unit: "dona", price: 0 },
       bm2_143100: { name: "7 Days kurassan s kryemom vanil 65gr", unit: "dona", price: 0 },
       bm2_143200: { name: "Uvyelka Ovsyanaya Kasha S Klubnikoy 5x40gr=200gr", unit: "dona", price: 0 },
@@ -2465,25 +2622,13 @@ const CATALOG = {
       bm2_143310: { name: "M. schaste pyure 90ml yabloko persik", unit: "dona", price: 0 },
       bm2_143340: { name: "Moxie jelly 500gr", unit: "dona", price: 0 },
       bm2_143420: { name: "ris yabloko 6", unit: "dona", price: 0 },
-      bm2_143620: { name: "Tsikory poroshok 12sht*85gr", unit: "dona", price: 0 },
-      bm2_143630: { name: "Tsikoriy naturalniy proshkoobrazniy ' Dachniy syezon' 150 g 12 up v kor", unit: "dona", price: 0 },
-      bm2_143640: { name: "Almero mm lapsha 168000", unit: "dona", price: 0 },
-      bm2_143860: { name: "Saber kakosli semichka 90g", unit: "dona", price: 0 },
-      bm2_144260: { name: "Hit iris 500gr", unit: "dona", price: 0 },
-      bm2_144320: { name: "twix 46gr", unit: "dona", price: 0 },
-      bm2_144330: { name: "Sudocrem bolalar", unit: "dona", price: 0 },
       bm2_144420: { name: "Xoroshiy 250 gr quti", unit: "dona", price: 0 },
       bm2_144480: { name: "Fruit Tella Qulupnay-qatiq chaynagichli 41 gr knvrt", unit: "dona", price: 0 },
-      bm2_144490: { name: "Dyetskaya Butilka Camere Plastikovaya 125ml", unit: "dona", price: 0 },
-      bm2_144540: { name: "Milka 90g", unit: "dona", price: 0 },
-      bm2_144570: { name: "kakao vanil 300gr", unit: "dona", price: 0 },
-      bm2_144670: { name: "Kent Boringer Olive Pomace Oil obyemom 250 ml.", unit: "dona", price: 0 },
       ur_107830: { name: "BABKINA SEMECHKI 250GR", unit: "dona", price: 0 },
       ur_112980: { name: "Algoritm manzura, Kungaboqar urug'i tuzlanmagan qovurilgan qora, polietilyen pakyetda 100 gr", unit: "dona", price: 0 },
       ur_112990: { name: "Algoritm manzura, Kungaboqar urug'i tuzlangan qovurilgan qora, polietilyen pakyetda 100 gr", unit: "dona", price: 0 },
       ur_113000: { name: "Mega, Kungaboqar urug'i qovurilgan yo'l-yo'l tuzlanmagan, qog'oz pakyet 100 gr", unit: "dona", price: 0 },
       ur_114650: { name: "Mega, Kungaboqar urug'i qovurilgan yo'l-yo'l tuzlangan, qog'oz pakyet 100 gr", unit: "dona", price: 0 },
-      ur_117860: { name: "Syemyechki Chyorniye s solyu 'Ermak' 100g 16 shtuk", unit: "dona", price: 0 },
     }
   },
 };
@@ -2523,6 +2668,9 @@ function fmt(n) {
 function goHome() {
   view = 'catalog';
   path = [];
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchClearBtn').style.display = 'none';
+  document.getElementById('crumbs').style.display = '';
   document.getElementById('navHome').classList.add('active');
   document.getElementById('navOrders').classList.remove('active');
   render();
@@ -2586,27 +2734,7 @@ function render() {
     const wrap = document.createElement('div');
     wrap.className = 'grid single';
     for (const [code, product] of Object.entries(products)) {
-      const row = document.createElement('div');
-      row.className = 'product-row';
-      const priceLabel = product.price ? `${fmt(product.price)} so'm / ${product.unit}` : `Narx kelishiladi`;
-      row.innerHTML = `
-        <div class="icon"><img src="assets/products/${code}.jpg" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='assets/products/${code}.png';}else{this.parentElement.innerHTML='🧴';}"></div>
-        <div class="info">
-          <div class="name">${product.name}</div>
-          <div class="price ${product.price ? 'set' : ''}">${priceLabel}</div>
-        </div>
-        <div class="qty-input-row">
-          <input type="number" min="1" value="1" inputmode="numeric" class="prod-qty-input">
-          <button class="add-btn-text" data-code="${code}">Qo'shish</button>
-        </div>
-      `;
-      const qtyInput = row.querySelector('.prod-qty-input');
-      row.querySelector('.add-btn-text').onclick = () => {
-        const qty = parseInt(qtyInput.value, 10);
-        if (!qty || qty < 1) { qtyInput.focus(); return; }
-        addToCart(code, product, qty);
-      };
-      wrap.appendChild(row);
+      wrap.appendChild(buildProductRow(code, product));
     }
     content.appendChild(wrap);
   }
@@ -2617,7 +2745,117 @@ function render() {
 
   updateCartBar();
   updateBackButton();
+  renderPopular();
 }
+
+function buildProductRow(code, product) {
+  const row = document.createElement('div');
+  row.className = 'product-row';
+  const priceLabel = product.price ? `${fmt(product.price)} so'm / ${product.unit}` : `Narx kelishiladi`;
+  row.innerHTML = `
+    <div class="icon"><img src="assets/products/${code}.jpg" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='assets/products/${code}.png';}else{this.parentElement.innerHTML='🧴';}"></div>
+    <div class="info">
+      <div class="name">${product.name}</div>
+      <div class="price ${product.price ? 'set' : ''}">${priceLabel}</div>
+    </div>
+    <div class="qty-input-row">
+      <input type="number" min="1" value="1" inputmode="numeric" class="prod-qty-input">
+      <button class="add-btn-text" data-code="${code}">Qo'shish</button>
+    </div>
+  `;
+  const qtyInput = row.querySelector('.prod-qty-input');
+  row.querySelector('.add-btn-text').onclick = () => {
+    const qty = parseInt(qtyInput.value, 10);
+    if (!qty || qty < 1) { qtyInput.focus(); return; }
+    addToCart(code, product, qty);
+  };
+  return row;
+}
+
+// ============ QIDIRUV ============
+let allProductsFlat = null;
+function flattenAllProducts() {
+  if (allProductsFlat) return allProductsFlat;
+  const out = [];
+  function walk(node, pathNames) {
+    for (const [code, product] of Object.entries(node.products || {})) {
+      out.push({ code, product, pathNames });
+    }
+    for (const [code, child] of Object.entries(node.children || {})) {
+      walk(child, [...pathNames, child.name]);
+    }
+  }
+  walk({ children: CATALOG }, []);
+  allProductsFlat = out;
+  return out;
+}
+
+function onSearchInput() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  document.getElementById('searchClearBtn').style.display = q ? 'block' : 'none';
+  if (!q) {
+    document.getElementById('crumbs').style.display = '';
+    render();
+    return;
+  }
+  document.getElementById('crumbs').style.display = 'none';
+  document.getElementById('popularSection').innerHTML = '';
+  const results = flattenAllProducts().filter(item => item.product.name.toLowerCase().includes(q));
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+  if (!results.length) {
+    content.innerHTML = '<div class="empty-note">Hech narsa topilmadi</div>';
+    return;
+  }
+  const wrap = document.createElement('div');
+  wrap.className = 'grid single';
+  for (const { code, product, pathNames } of results.slice(0, 40)) {
+    const row = buildProductRow(code, product);
+    const pathTag = document.createElement('div');
+    pathTag.style.cssText = 'font-size:11px;color:var(--muted);margin:-4px 0 4px 2px;';
+    pathTag.textContent = pathNames.join(' / ');
+    row.querySelector('.info').prepend(pathTag);
+    wrap.appendChild(row);
+  }
+  content.appendChild(wrap);
+}
+
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  onSearchInput();
+}
+
+// ============ MASHHUR MAHSULOTLAR ============
+const POPULAR_CODES = ['nan1_400', 'chocolate', 'nescafe_gold_95', 'kitkat_64', 'alpen_milk'];
+function renderPopular() {
+  const el = document.getElementById('popularSection');
+  if (path.length || view !== 'catalog') { el.innerHTML = ''; return; }
+  const flat = flattenAllProducts();
+  const items = POPULAR_CODES
+    .map(code => flat.find(f => f.code === code))
+    .filter(Boolean);
+  if (!items.length) { el.innerHTML = ''; return; }
+  const cards = items.map(({ code, product }) => {
+    const priceLabel = product.price ? `${fmt(product.price)} so'm` : "Narx kelishiladi";
+    return `
+      <div class="popular-card">
+        <div class="icon"><img src="assets/products/${code}.jpg" alt="${product.name}" onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='assets/products/${code}.png';}else{this.parentElement.textContent='🧴';}"></div>
+        <div class="name">${product.name}</div>
+        <div class="price">${priceLabel}</div>
+        <button onclick="addToCart('${code}', CATALOG_PRODUCT_LOOKUP['${code}'], 1)">Qo'shish</button>
+      </div>`;
+  }).join('');
+  el.innerHTML = `
+    <div class="popular-section">
+      <div class="popular-title">Tavsiya etiladi</div>
+      <div class="popular-scroll">${cards}</div>
+    </div>`;
+}
+
+const CATALOG_PRODUCT_LOOKUP = {};
+flattenAllProducts().forEach(({ code, product }) => { CATALOG_PRODUCT_LOOKUP[code] = product; });
+
+
 
 function addToCart(code, product, qty) {
   qty = qty || 1;
@@ -2690,6 +2928,10 @@ function showOrders() {
   view = 'orders';
   document.getElementById('navHome').classList.remove('active');
   document.getElementById('navOrders').classList.add('active');
+  document.getElementById('popularSection').innerHTML = '';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchClearBtn').style.display = 'none';
+  document.getElementById('crumbs').style.display = '';
   const content = document.getElementById('content');
   document.getElementById('crumbs').innerHTML = '';
   content.innerHTML = '';
