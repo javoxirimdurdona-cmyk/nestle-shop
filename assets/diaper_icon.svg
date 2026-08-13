@@ -1,0 +1,13 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="diaperGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#EFDCCB"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="60" cy="100" rx="34" ry="6" fill="#3A1D0C" opacity="0.12"/>
+  <path d="M20 40c0-8 6-14 14-14h52c8 0 14 6 14 14v10c0 20-18 42-40 42S20 70 20 50z" fill="url(#diaperGrad)" stroke="#E3D3C8" stroke-width="1.5"/>
+  <path d="M20 50c8 6 20 9 40 9s32-3 40-9" fill="none" stroke="#F5A623" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="42" cy="34" r="4" fill="#C81D2A"/>
+  <circle cx="78" cy="34" r="4" fill="#C81D2A"/>
+  <path d="M50 60c3 4 7 6 10 6s7-2 10-6" stroke="#C81D2A" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>

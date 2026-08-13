@@ -1,0 +1,18 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sackGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F5A623"/><stop offset="100%" stop-color="#B9700F"/>
+    </linearGradient>
+    <linearGradient id="wheatGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FBD38A"/><stop offset="100%" stop-color="#E0871A"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="60" cy="104" rx="28" ry="5" fill="#3A1D0C" opacity="0.14"/>
+  <path d="M38 50c0-4 3-7 8-7h28c5 0 8 3 8 7l6 40c0 8-11 14-28 14s-28-6-28-14z" fill="url(#sackGrad)"/>
+  <path d="M50 43l-4-14M60 43l0-16M70 43l4-14" stroke="#7A4A0C" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <g fill="url(#wheatGrad)">
+    <ellipse cx="46" cy="24" rx="4" ry="7"/><ellipse cx="54" cy="20" rx="4" ry="7"/>
+    <ellipse cx="62" cy="17" rx="4" ry="7"/><ellipse cx="70" cy="20" rx="4" ry="7"/>
+    <ellipse cx="78" cy="24" rx="4" ry="7"/>
+  </g>
+</svg>

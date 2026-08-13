@@ -1,0 +1,45 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bottleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="60%" stop-color="#F4E9E2"/>
+      <stop offset="100%" stop-color="#E3D3C8"/>
+    </linearGradient>
+    <linearGradient id="capGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E24C56"/>
+      <stop offset="100%" stop-color="#9A1520"/>
+    </linearGradient>
+    <radialGradient id="bottleHighlight" cx="30%" cy="20%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="60" cy="106" rx="26" ry="5" fill="#3A1D0C" opacity="0.14"/>
+
+  <!-- Shisha bo'yni -->
+  <rect x="50" y="16" width="20" height="16" rx="3" fill="url(#capGrad)"/>
+  <rect x="47" y="28" width="26" height="10" rx="4" fill="url(#bottleGrad)" stroke="#D9C6BA" stroke-width="1"/>
+
+  <!-- Shisha tanasi -->
+  <path d="M40 38
+           C40 34 44 32 60 32
+           C76 32 80 34 80 38
+           L84 92
+           C84 100 76 106 60 106
+           C44 106 36 100 36 92
+           Z"
+        fill="url(#bottleGrad)" stroke="#E3D3C8" stroke-width="1.5"/>
+  <path d="M40 38
+           C40 34 44 32 60 32
+           C76 32 80 34 80 38
+           L84 92
+           C84 100 76 106 60 106
+           C44 106 36 100 36 92
+           Z"
+        fill="url(#bottleHighlight)"/>
+
+  <!-- Qizil yorliq -->
+  <rect x="36" y="62" width="48" height="24" fill="url(#capGrad)"/>
+  <text x="60" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="white">SUT</text>
+</svg>

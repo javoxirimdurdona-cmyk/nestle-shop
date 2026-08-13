@@ -1,0 +1,13 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="candyBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5A623"/><stop offset="100%" stop-color="#E24C56"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="60" cy="98" rx="30" ry="5" fill="#3A1D0C" opacity="0.14"/>
+  <g transform="translate(60 60) rotate(-20)">
+    <path d="M-32 -14 L-20 -20 L-20 20 L-32 14 Z" fill="#FBD38A"/>
+    <ellipse cx="0" cy="0" rx="22" ry="16" fill="url(#candyBodyGrad)"/>
+    <path d="M32 -14 L20 -20 L20 20 L32 14 Z" fill="#FBD38A"/>
+  </g>
+</svg>

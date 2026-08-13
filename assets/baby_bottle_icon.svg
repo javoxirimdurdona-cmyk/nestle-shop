@@ -1,0 +1,14 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="babyBottleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#EFDCCB"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="60" cy="106" rx="20" ry="5" fill="#3A1D0C" opacity="0.14"/>
+  <ellipse cx="60" cy="20" rx="10" ry="6" fill="#F5A623"/>
+  <rect x="50" y="24" width="20" height="10" rx="3" fill="#E24C56"/>
+  <path d="M44 34h32c3 0 5 2 5 5l-3 58c-1 6-8 10-17 10h-2c-9 0-16-4-17-10l-3-58c0-3 2-5 5-5z" fill="url(#babyBottleGrad)" stroke="#E3D3C8" stroke-width="1.5"/>
+  <line x1="42" y1="58" x2="78" y2="58" stroke="#C81D2A" stroke-width="2" opacity="0.5"/>
+  <line x1="43" y1="70" x2="77" y2="70" stroke="#C81D2A" stroke-width="2" opacity="0.5"/>
+  <line x1="44" y1="82" x2="76" y2="82" stroke="#C81D2A" stroke-width="2" opacity="0.5"/>
+</svg>

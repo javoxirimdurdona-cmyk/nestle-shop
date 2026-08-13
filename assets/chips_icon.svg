@@ -1,0 +1,12 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="chipsBagGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F5A623"/><stop offset="100%" stop-color="#C87A12"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="60" cy="104" rx="26" ry="5" fill="#3A1D0C" opacity="0.14"/>
+  <path d="M34 30l-6 66c0 6 14 10 32 10s32-4 32-10l-6-66z" fill="url(#chipsBagGrad)"/>
+  <path d="M34 30c0-8 12-14 26-14s26 6 26 14" fill="none" stroke="#B9700F" stroke-width="3"/>
+  <rect x="38" y="50" width="44" height="26" rx="4" fill="#C81D2A"/>
+  <text x="60" y="68" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="white">CHIPS</text>
+</svg>

@@ -1,0 +1,14 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="popcornBoxGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E24C56"/><stop offset="100%" stop-color="#9A1520"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="60" cy="104" rx="26" ry="5" fill="#3A1D0C" opacity="0.14"/>
+  <path d="M36 46h48l-6 54c-1 4-4 6-8 6H50c-4 0-7-2-8-6z" fill="url(#popcornBoxGrad)"/>
+  <rect x="34" y="40" width="52" height="10" rx="2" fill="#FBF3EE"/>
+  <g fill="#FBF3EE">
+    <circle cx="46" cy="34" r="8"/><circle cx="60" cy="28" r="9"/><circle cx="74" cy="34" r="8"/>
+    <circle cx="53" cy="24" r="6"/><circle cx="67" cy="24" r="6"/>
+  </g>
+</svg>

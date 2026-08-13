@@ -1,0 +1,37 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="canBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E24C56"/>
+      <stop offset="55%" stop-color="#C81D2A"/>
+      <stop offset="100%" stop-color="#8F1420"/>
+    </linearGradient>
+    <linearGradient id="canLidGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FBD38A"/>
+      <stop offset="60%" stop-color="#D9A441"/>
+      <stop offset="100%" stop-color="#B9700F"/>
+    </linearGradient>
+    <radialGradient id="canHighlight" cx="30%" cy="15%" r="55%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="60" cy="104" rx="30" ry="6" fill="#3A1D0C" opacity="0.16"/>
+
+  <!-- Idish tanasi (silindr) -->
+  <rect x="28" y="34" width="64" height="66" rx="4" fill="url(#canBodyGrad)"/>
+  <rect x="28" y="34" width="64" height="66" rx="4" fill="url(#canHighlight)"/>
+
+  <!-- Pastki qopqoq chizig'i -->
+  <ellipse cx="60" cy="100" rx="32" ry="7" fill="url(#canLidGrad)"/>
+
+  <!-- Yuqori qopqoq -->
+  <ellipse cx="60" cy="34" rx="32" ry="9" fill="url(#canLidGrad)"/>
+  <ellipse cx="60" cy="32" rx="26" ry="6.5" fill="#E8C878"/>
+  <ellipse cx="60" cy="32" rx="26" ry="6.5" fill="none" stroke="#B9700F" stroke-width="1" opacity="0.4"/>
+
+  <!-- Yorliq -->
+  <rect x="28" y="56" width="64" height="24" fill="#FBF3EE" opacity="0.95"/>
+  <line x1="28" y1="60" x2="92" y2="60" stroke="#C81D2A" stroke-width="2" opacity="0.5"/>
+  <line x1="28" y1="76" x2="92" y2="76" stroke="#C81D2A" stroke-width="2" opacity="0.5"/>
+</svg>
