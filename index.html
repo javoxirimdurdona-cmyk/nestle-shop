@@ -19,6 +19,22 @@
     --line: #F2E4DC;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes popScale {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.14); }
+    100% { transform: scale(1); }
+  }
+  @keyframes shakeCart {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-6deg); }
+    75% { transform: rotate(6deg); }
+  }
+  .anim-rise { animation: riseIn .32s cubic-bezier(.22,.85,.4,1) both; }
   body {
     margin: 0;
     background: var(--bg);
@@ -89,13 +105,13 @@
     padding: 18px 16px;
     border: 1px solid var(--line);
     cursor: pointer;
-    transition: transform .12s ease;
+    transition: transform .15s cubic-bezier(.34,1.56,.64,1), box-shadow .15s ease;
     display: flex;
     flex-direction: column;
     gap: 10px;
     box-shadow: 0 3px 14px rgba(200,29,42,0.07);
   }
-  .tile:active { transform: scale(0.96); }
+  .tile:active { transform: scale(0.95); box-shadow: 0 1px 6px rgba(200,29,42,0.1); }
   .tile .icon {
     width: 58px; height: 58px;
     border-radius: 16px;
@@ -167,7 +183,9 @@
     border-radius: 18px;
     padding: 12px;
     box-shadow: 0 3px 14px rgba(200,29,42,0.06);
+    transition: transform .15s ease;
   }
+  .popular-card:active { transform: scale(0.96); }
   .popular-card .icon {
     width: calc(100% + 16px); height: 144px;
     margin-left: -8px;
@@ -268,7 +286,10 @@
     font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
+    transition: transform .12s ease, background .15s ease;
   }
+  .qty-input-row button.add-btn-text:active { transform: scale(0.9); }
+  .qty-input-row button.add-btn-text.added { background: #2E9E5B; }
   .cart-item input.cart-qty-input {
     width: 56px;
     padding: 7px 4px;
@@ -303,9 +324,12 @@
     font-weight: 600;
     cursor: pointer;
     position: relative;
+    transition: color .2s ease;
   }
   nav.bottom-nav .nav-btn.active { color: var(--primary); }
-  nav.bottom-nav .nav-btn .ic { font-size: 20px; }
+  nav.bottom-nav .nav-btn.active .ic { animation: popScale .3s ease; }
+  nav.bottom-nav .nav-btn .ic { font-size: 20px; transition: transform .15s ease; display: inline-block; }
+  nav.bottom-nav .nav-btn:active .ic { transform: scale(0.85); }
   nav.bottom-nav .badge {
     position: absolute;
     top: -2px; right: 24%;
@@ -333,23 +357,32 @@
     cursor: pointer;
     font-weight: 700;
     z-index: 40;
+    animation: riseIn .3s cubic-bezier(.22,.85,.4,1) both;
+    transition: transform .12s ease;
   }
+  .cart-bar:active { transform: scale(0.97); }
+  .cart-bar.pulse .count { animation: popScale .35s ease; }
   .cart-bar .count {
     background: rgba(255,255,255,0.25);
     border-radius: 999px;
     padding: 2px 9px;
     font-size: 13px;
     margin-right: 8px;
+    display: inline-block;
   }
 
   .sheet-overlay {
     position: fixed; inset: 0;
     background: rgba(36,18,19,0.45);
-    display: none;
+    display: flex;
     align-items: flex-end;
     z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .28s ease;
   }
-  .sheet-overlay.open { display: flex; }
+  .sheet-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; }
   .sheet {
     background: var(--bg);
     width: 100%;
@@ -357,7 +390,10 @@
     overflow-y: auto;
     border-radius: 22px 22px 0 0;
     padding: 18px 16px 24px;
+    transform: translateY(40px);
+    transition: transform .32s cubic-bezier(.32,.94,.6,1);
   }
+  .sheet-overlay.open .sheet { transform: translateY(0); }
   .sheet-handle {
     width: 40px; height: 4px;
     background: var(--line);
@@ -423,9 +459,15 @@
     padding: 40px 20px;
   }
 
+  @keyframes markPop {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); }
+  }
   .confirm-screen {
     text-align: center;
     padding: 60px 24px;
+    animation: riseIn .35s ease both;
   }
   .confirm-screen .mark {
     width: 64px; height: 64px;
@@ -435,6 +477,7 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 30px;
     margin: 0 auto 18px;
+    animation: markPop .5s cubic-bezier(.34,1.56,.64,1) both;
   }
 
   .order-card {
@@ -2759,9 +2802,16 @@ function render() {
     content.innerHTML = '<div class="empty-note">Bu yerda hozircha mahsulot yo\'q</div>';
   }
 
+  playRiseIn(content);
   updateCartBar();
   updateBackButton();
   renderPopular();
+}
+
+function playRiseIn(el) {
+  el.classList.remove('anim-rise');
+  void el.offsetWidth;
+  el.classList.add('anim-rise');
 }
 
 function buildProductRow(code, product) {
@@ -2780,10 +2830,18 @@ function buildProductRow(code, product) {
     </div>
   `;
   const qtyInput = row.querySelector('.prod-qty-input');
-  row.querySelector('.add-btn-text').onclick = () => {
+  const addBtn = row.querySelector('.add-btn-text');
+  addBtn.onclick = () => {
     const qty = parseInt(qtyInput.value, 10);
     if (!qty || qty < 1) { qtyInput.focus(); return; }
     addToCart(code, product, qty);
+    const original = addBtn.textContent;
+    addBtn.textContent = '✓ Qo\'shildi';
+    addBtn.classList.add('added');
+    setTimeout(() => {
+      addBtn.textContent = original;
+      addBtn.classList.remove('added');
+    }, 700);
   };
   return row;
 }
@@ -2901,6 +2959,9 @@ function updateCartBar() {
   badge.textContent = count;
   document.getElementById('cartCount').textContent = count;
   document.getElementById('cartTotal').textContent = fmt(cartTotal()) + " so'm";
+  bar.classList.remove('pulse');
+  void bar.offsetWidth;
+  bar.classList.add('pulse');
 }
 
 function openCart() {
