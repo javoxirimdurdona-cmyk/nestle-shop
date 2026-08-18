@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nestle.uz — Boshqaruv paneli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #2B1C1D;
+    --bg: #FCF6F1;
+    --card: #FFFFFF;
+    --primary: #D42B3A;
+    --primary-dark: #A11C29;
+    --accent: #F5A623;
+    --muted: #A6968F;
+    --line: #F2E4DC;
+    --green: #2E9E5B;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+  }
+  h1, h2, .display { font-family: 'Fraunces', serif; }
+
+  /* ===== LOGIN EKRANI ===== */
+  #loginScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .login-box {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 32px 28px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 8px 30px rgba(200,29,42,0.1);
+  }
+  .login-box h1 {
+    font-size: 22px;
+    margin: 0 0 4px;
+    color: var(--primary-dark);
+  }
+  .login-box p.sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0 0 24px;
+  }
+  .login-box input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-size: 14px;
+    margin-bottom: 12px;
+    font-family: inherit;
+  }
+  .login-box button {
+    width: 100%;
+    padding: 13px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .login-box button:active { transform: scale(0.98); }
+  #loginError {
+    color: var(--primary);
+    font-size: 13px;
+    margin-top: 10px;
+    display: none;
+  }
+
+  /* ===== ADMIN PANEL ===== */
+  #adminScreen { display: none; padding-bottom: 60px; }
+  header.admin-top {
+    background: var(--primary);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  header.admin-top h1 { font-size: 18px; margin: 0; }
+  header.admin-top button {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .toolbar {
+    padding: 14px 20px;
+    background: var(--bg);
+    position: sticky;
+    top: 56px;
+    z-index: 19;
+    border-bottom: 1px solid var(--line);
+  }
+  .toolbar input {
+    width: 100%;
+    padding: 11px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .toolbar .stats {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .product-list {
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .product-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .product-card .thumb {
+    width: 56px; height: 56px;
+    border-radius: 10px;
+    background: #F4E9E2;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    border: 2px dashed var(--line);
+  }
+  .product-card .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .product-card .thumb.dragover { border-color: var(--primary); background: #FCEBE9; }
+  .product-card .thumb .icon-hint { font-size: 20px; color: var(--muted); }
+  .product-card .thumb input[type=file] { display: none; }
+
+  .product-card .info { flex: 1; min-width: 0; }
+  .product-card .name { font-size: 13.5px; font-weight: 600; line-height: 1.3; }
+  .product-card .path { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .product-card .price-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .product-card .price-row input {
+    width: 110px;
+    padding: 7px 10px;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .product-card .price-row span.unit { font-size: 12px; color: var(--muted); }
+  .product-card .save-status {
+    font-size: 11px;
+    margin-left: 4px;
+  }
+  .save-status.saved { color: var(--green); }
+  .save-status.saving { color: var(--accent); }
+
+  .empty-note {
+    text-align: center;
+    color: var(--muted);
+    padding: 40px 20px;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN EKRANI ============ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>Boshqaruv paneli</h1>
+    <p class="sub">Nestle.uz — narx va rasmlarni boshqarish</p>
+    <input id="emailInput" type="email" placeholder="Email" autocomplete="username">
+    <input id="passwordInput" type="password" placeholder="Parol" autocomplete="current-password">
+    <button onclick="doLogin()">Kirish</button>
+    <div id="loginError">Email yoki parol noto'g'ri</div>
+  </div>
+</div>
+
+<!-- ============ ADMIN PANEL ============ -->
+<div id="adminScreen">
+  <header class="admin-top">
+    <h1>Nestle.uz boshqaruvi</h1>
+    <button onclick="doLogout()">Chiqish</button>
+  </header>
+  <div class="toolbar">
+    <input id="searchInput" type="text" placeholder="Mahsulot qidirish..." oninput="renderList()">
+    <div class="stats" id="statsLine"></div>
+  </div>
+  <div class="product-list" id="productList"></div>
+</div>
+
+<!-- ============ FIREBASE SDK ============ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDocs, collection }
+    from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+  // ============================================================
+  // MUHIM: Quyidagi qiymatlarni O'ZINGIZNING Firebase loyihangiz
+  // konfiguratsiyasi bilan almashtiring (Firebase Console >
+  // Project Settings > Your apps > SDK setup and configuration).
+  // ============================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyCrdKiN8PQROhWw5n5Wg91CsLreG4XbXHo",
+    authDomain: "nestleuz-9fb4b.firebaseapp.com",
+    projectId: "nestleuz-9fb4b",
+    storageBucket: "nestleuz-9fb4b.firebasestorage.app",
+    messagingSenderId: "525782274076",
+    appId: "1:525782274076:web:9fda168f534fbd5b3b8fd9",
+    measurementId: "G-LNTE4GTGTP"
+  };
+
+  // ============================================================
+  // MUHIM: Cloudinary ma'lumotlaringizni shu yerga qo'ying
+  // (Cloudinary Dashboard > Cloud name, va Settings > Upload >
+  // Upload presets > sizning "unsigned" preset nomingiz)
+  // ============================================================
+  const CLOUDINARY_CLOUD_NAME = "PLACEHOLDER_CLOUD_NAME";
+  const CLOUDINARY_UPLOAD_PRESET = "PLACEHOLDER_UPLOAD_PRESET";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  window.doLogin = async function() {
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value;
+    const errEl = document.getElementById('loginError');
+    errEl.style.display = 'none';
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (e) {
+      errEl.textContent = "Xatolik: " + (e.message || "Email yoki parol noto'g'ri");
+      errEl.style.display = 'block';
+    }
+  };
+
+  window.doLogout = function() {
+    signOut(auth);
+  };
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminScreen').style.display = 'block';
+      loadOverrides().then(renderList);
+    } else {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('adminScreen').style.display = 'none';
+    }
+  });
+
+  // Firestore'dan hozirgi narx/rasm ustma-ustlarini yuklaymiz
+  window.OVERRIDES = {};
+  async function loadOverrides() {
+    const snap = await getDocs(collection(db, 'products'));
+    snap.forEach(d => {
+      window.OVERRIDES[d.id] = d.data();
+    });
+  }
+
+  window.savePrice = async function(code, price) {
+    const statusEl = document.getElementById('status-' + code);
+    if (statusEl) { statusEl.textContent = 'Saqlanmoqda...'; statusEl.className = 'save-status saving'; }
+    try {
+      await setDoc(doc(db, 'products', code), { price: Number(price) || 0 }, { merge: true });
+      window.OVERRIDES[code] = { ...(window.OVERRIDES[code] || {}), price: Number(price) || 0 };
+      if (statusEl) { statusEl.textContent = 'Saqlandi ✓'; statusEl.className = 'save-status saved'; }
+    } catch (e) {
+      if (statusEl) { statusEl.textContent = 'Xatolik!'; statusEl.className = 'save-status'; }
+      console.error(e);
+    }
+  };
+
+  window.uploadImage = async function(code, file) {
+    const thumb = document.getElementById('thumb-' + code);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.secure_url) {
+        await setDoc(doc(db, 'products', code), { imageUrl: data.secure_url }, { merge: true });
+        window.OVERRIDES[code] = { ...(window.OVERRIDES[code] || {}), imageUrl: data.secure_url };
+        thumb.innerHTML = `<img src="${data.secure_url}" alt="">`;
+      } else {
+        alert("Rasm yuklashda xatolik: " + (data.error?.message || 'noma\'lum xato'));
+      }
+    } catch (e) {
+      alert("Rasm yuklashda xatolik yuz berdi");
+      console.error(e);
+    }
+  };
+
+  window.renderList = function() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const listEl = document.getElementById('productList');
+    const statsEl = document.getElementById('statsLine');
+    const all = window.PRODUCTS_FLAT || [];
+    const filtered = q ? all.filter(p => p.name.toLowerCase().includes(q)) : all;
+    const shown = filtered.slice(0, 100);
+
+    statsEl.textContent = `${filtered.length} ta topildi (${shown.length} tasi ko'rsatilmoqda) — jami ${all.length} ta mahsulot`;
+
+    if (!shown.length) {
+      listEl.innerHTML = '<div class="empty-note">Hech narsa topilmadi</div>';
+      return;
+    }
+
+    listEl.innerHTML = shown.map(p => {
+      const override = window.OVERRIDES[p.code] || {};
+      const price = override.price !== undefined ? override.price : p.price;
+      const imageUrl = override.imageUrl || '';
+      const thumbContent = imageUrl
+        ? `<img src="${imageUrl}" alt="">`
+        : `<span class="icon-hint">📷</span>`;
+      return `
+        <div class="product-card">
+          <div class="thumb" id="thumb-${p.code}"
+               ondragover="event.preventDefault(); this.classList.add('dragover')"
+               ondragleave="this.classList.remove('dragover')"
+               ondrop="handleDrop(event, '${p.code}')"
+               onclick="document.getElementById('file-${p.code}').click()">
+            ${thumbContent}
+            <input type="file" id="file-${p.code}" accept="image/*" onchange="handleFileSelect(event, '${p.code}')">
+          </div>
+          <div class="info">
+            <div class="name">${p.name}</div>
+            <div class="path">${p.path}</div>
+            <div class="price-row">
+              <input type="number" value="${price}" id="price-${p.code}"
+                     onblur="savePrice('${p.code}', this.value)">
+              <span class="unit">so'm</span>
+              <span class="save-status" id="status-${p.code}"></span>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  };
+
+  window.handleDrop = function(e, code) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) uploadImage(code, file);
+  };
+
+  window.handleFileSelect = function(e, code) {
+    const file = e.target.files[0];
+    if (file) uploadImage(code, file);
+  };
+</script>
+
+<script src="products-flat.js"></script>
+<script>window.PRODUCTS_FLAT = PRODUCTS_FLAT;</script>
+
+</body>
+</html>
