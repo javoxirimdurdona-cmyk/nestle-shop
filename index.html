@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper: #F7F7F5;
+    --paper: #FBF4F3;
     --card: #FFFFFF;
     --ink: #16181C;
     --muted: #86878F;
@@ -40,6 +40,7 @@
     font-family: 'Inter', sans-serif;
     padding-bottom: 150px;
     -webkit-font-smoothing: antialiased;
+    transition: background-color .35s ease;
   }
   h1, h2, h3, .display { font-family: 'Manrope', sans-serif; font-weight: 800; letter-spacing: -0.01em; }
 
@@ -3902,7 +3903,8 @@ function render() {
       const iconHtml = child.iconImg
         ? `<img src="${child.iconImg}" alt="${child.name}">`
         : (child.icon || '📁');
-      tile.innerHTML = `<div class="icon">${iconHtml}</div><div class="name">${child.name}</div>`;
+      const tileBg = path.length === 0 ? (CATEGORY_COLORS[code] || DEFAULT_TILE_BG) : (CATEGORY_COLORS[path[0]] || DEFAULT_TILE_BG);
+      tile.innerHTML = `<div class="icon" style="background:${tileBg}">${iconHtml}</div><div class="name">${child.name}</div>`;
       grid.appendChild(tile);
     }
     content.appendChild(grid);
@@ -3926,6 +3928,7 @@ function render() {
   updateBackButton();
   renderPopular();
   renderChipRail();
+  updatePageBackground();
 }
 
 function renderChipRail() {
@@ -3935,7 +3938,8 @@ function renderChipRail() {
     const iconHtml = n.iconImg
       ? `<img src="${n.iconImg}" alt="">`
       : `<span>${n.icon || '📁'}</span>`;
-    return `<button class="chip" onclick="path=['${code}'];render();"><span class="chip-ic">${iconHtml}</span>${n.name}</button>`;
+    const bg = CATEGORY_COLORS[code] || DEFAULT_TILE_BG;
+    return `<button class="chip" onclick="path=['${code}'];render();"><span class="chip-ic" style="background:${bg}">${iconHtml}</span>${n.name}</button>`;
   }).join('');
 }
 
@@ -3949,8 +3953,9 @@ function buildProductRow(code, product) {
   const row = document.createElement('div');
   row.className = 'product-row';
   const priceLabel = product.price ? `${fmt(product.price)} so'm / ${product.unit}` : `Narx kelishiladi`;
+  const bg = categoryColorFor(code);
   row.innerHTML = `
-    <div class="icon"><img src="${product.imageUrl || ('assets/products/' + code + '.jpg')}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;" onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='assets/products/${code}.png';}else{this.parentElement.innerHTML='🧴';}"></div>
+    <div class="icon" style="background:${bg}"><img src="${product.imageUrl || ('assets/products/' + code + '.jpg')}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;" onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='assets/products/${code}.png';}else{this.parentElement.innerHTML='🧴';}"></div>
     <div class="info">
       <div class="name">${product.name}</div>
       <div class="price ${product.price ? 'set' : ''}">${priceLabel}</div>
@@ -4036,6 +4041,7 @@ function onSearchInput() {
   }
   document.getElementById('crumbs').style.display = 'none';
   document.getElementById('popularSection').innerHTML = '';
+  document.body.style.background = '';
   const results = flattenAllProducts().filter(item => item.product.name.toLowerCase().includes(q));
   const content = document.getElementById('content');
   content.innerHTML = '';
@@ -4073,9 +4079,10 @@ function renderPopular() {
   if (!items.length) { el.innerHTML = ''; return; }
   const cards = items.map(({ code, product }) => {
     const priceLabel = product.price ? `${fmt(product.price)} so'm` : "Narx kelishiladi";
+    const bg = categoryColorFor(code);
     return `
       <div class="popular-card">
-        <div class="icon">
+        <div class="icon" style="background:${bg}">
           <img src="${product.imageUrl || ('assets/products/' + code + '.jpg')}" alt="${product.name}" onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='assets/products/${code}.png';}else{this.parentElement.textContent='🧴';}">
           <div class="corner-qadd" data-qc="${code}">${qtyControlHTML(code)}</div>
         </div>
@@ -4093,6 +4100,70 @@ function renderPopular() {
 const CATALOG_PRODUCT_LOOKUP = {};
 flattenAllProducts().forEach(({ code, product }) => { CATALOG_PRODUCT_LOOKUP[code] = product; });
 window.CATALOG_PRODUCT_LOOKUP = CATALOG_PRODUCT_LOOKUP;
+
+// ============ KATEGORIYA RANGLARI (aisle-code) ============
+const CATEGORY_COLORS = {
+  baby: '#CFE7FA',
+  sweets: '#FAD9E3',
+  coffee: '#EBDCC7',
+  ichimliklar: '#FCEEB0',
+  yorma: '#F1E0B8',
+  sous_ziravorlar: '#FBDCC0',
+  konservalar: '#CFEEDD',
+  bolalar_gigiyenasi: '#E5DBF7',
+  gazaklar: '#FBE0C8',
+  bolalar_aksessuarlari: '#D6E9FA',
+  sut_pishloq: '#FCEEB0',
+  konserva2: '#CFEEDD',
+  tez_taom: '#FBD9CE',
+  kakao_choy_kofe: '#EBDCC7',
+  urug_gazak2: '#FBE0C8',
+  bolalar_aksessuar2: '#D6E9FA',
+  bolalar_gigiyena2: '#E5DBF7',
+  sirok_yogurt2: '#FCEEB0',
+  saqich_konditer: '#FAD9E3',
+  shokolad_konfet2: '#FAD9E3',
+  moy_yog: '#F0E4C0',
+  qadoqlash: '#E5E5E3',
+};
+const DEFAULT_TILE_BG = '#EFEFEF';
+
+const CODE_TO_TOP_KEY = {};
+(function buildCodeToTopKey() {
+  function walk(node, topKey) {
+    for (const code of Object.keys(node.products || {})) {
+      CODE_TO_TOP_KEY[code] = topKey;
+    }
+    for (const child of Object.values(node.children || {})) {
+      walk(child, topKey);
+    }
+  }
+  for (const [topKey, node] of Object.entries(CATALOG)) {
+    walk(node, topKey);
+  }
+})();
+
+function categoryColorFor(code) {
+  return CATEGORY_COLORS[CODE_TO_TOP_KEY[code]] || DEFAULT_TILE_BG;
+}
+
+function lightenHex(hex, amt) {
+  const c = hex.replace('#', '');
+  const r = parseInt(c.substring(0, 2), 16);
+  const g = parseInt(c.substring(2, 4), 16);
+  const b = parseInt(c.substring(4, 6), 16);
+  const mix = (v) => Math.round(v + (255 - v) * amt);
+  return `rgb(${mix(r)},${mix(g)},${mix(b)})`;
+}
+
+function updatePageBackground() {
+  const topKey = path.length ? path[0] : null;
+  if (topKey && CATEGORY_COLORS[topKey]) {
+    document.body.style.background = lightenHex(CATEGORY_COLORS[topKey], 0.6);
+  } else {
+    document.body.style.background = '';
+  }
+}
 
 
 
@@ -4168,6 +4239,7 @@ function closeCheckout() { document.getElementById('checkoutOverlay').classList.
 
 function showOrders() {
   view = 'orders';
+  document.body.style.background = '';
   document.getElementById('navHome').classList.remove('active');
   document.getElementById('navOrders').classList.add('active');
   document.getElementById('popularSection').innerHTML = '';
