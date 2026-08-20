@@ -140,7 +140,7 @@
     background: var(--card);
     border: 1.5px solid var(--line);
     border-radius: 14px;
-    padding: 3px 14px;
+    padding: 3px 12px;
     width: 100%;
     transition: border-color .15s ease;
   }
@@ -152,14 +152,14 @@
     flex: 1;
     width: 0;
     min-width: 0;
-    padding: 13px 0 11px;
+    padding: 15px 0 4px;
     line-height: 1.2;
-    font-size: 14px;
+    font-size: 13px;
     font-family: 'Inter', sans-serif;
     color: var(--ink);
   }
   .search-box input::placeholder { color: var(--muted); }
-  .search-box .ic { font-size: 15px; color: var(--muted); flex-shrink: 0; }
+  .search-box .ic { font-size: 13px; color: var(--muted); flex-shrink: 0; padding-top: 3px; }
   .search-clear {
     border: none; background: none; color: var(--muted);
     font-size: 15px; cursor: pointer; padding: 0 2px; flex-shrink: 0;
@@ -194,8 +194,6 @@
   .chip .chip-ic {
     width: 24px; height: 24px;
     border-radius: 50%;
-    background: var(--paper);
-    border: 1.5px dashed rgba(22,24,28,0.18);
     display: flex; align-items: center; justify-content: center;
     overflow: hidden;
     font-size: 13px;
@@ -211,33 +209,6 @@
     padding: 4px 16px 16px;
   }
   .grid.single { grid-template-columns: 1fr; gap: 0; padding: 4px 16px 16px; }
-
-  .tile {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 12px 8px 11px;
-    border: 1px solid var(--line);
-    cursor: pointer;
-    transition: transform .13s cubic-bezier(.34,1.56,.64,1), border-color .13s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 7px;
-  }
-  .tile:active { transform: scale(0.94); border-color: var(--ink); }
-  .tile .icon {
-    width: 42px; height: 42px;
-    border-radius: 50%;
-    background: var(--paper);
-    border: 1.5px dashed rgba(22,24,28,0.18);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    overflow: hidden;
-    transform: rotate(-2deg);
-  }
-  .tile .icon img { width: 100%; height: 100%; object-fit: contain; transform: rotate(2deg); }
-  .tile .name { font-weight: 700; font-size: 11.5px; line-height: 1.25; }
 
   /* ===== KATEGORIYA RO'YXATI (ledger entry) ===== */
   .cat-list { padding: 4px 16px 10px; }
@@ -255,20 +226,17 @@
   .cat-row .icon {
     width: 40px; height: 40px;
     border-radius: 50%;
-    background: var(--paper);
-    border: 1.5px dashed rgba(22,24,28,0.2);
     display: flex; align-items: center; justify-content: center;
     font-size: 18px;
     overflow: hidden;
     flex-shrink: 0;
-    transform: rotate(-3deg);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
   }
-  .cat-row .icon img { width: 100%; height: 100%; object-fit: contain; transform: rotate(3deg); }
+  .cat-row .icon img { width: 100%; height: 100%; object-fit: contain; }
   .cat-row .cat-name { font-weight: 700; font-size: 14px; white-space: nowrap; flex-shrink: 0; }
   .cat-row .dots { flex: 1; border-bottom: 2px dotted var(--line); margin: 0 4px 4px; min-width: 10px; }
   .cat-row .cat-count { font-family: var(--mono); font-size: 11.5px; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
   .cat-row .chev { color: var(--muted); font-size: 15px; margin-left: 2px; flex-shrink: 0; }
-  .tile .meta { display: none; }
 
   /* ===== POPULAR RAIL ===== */
   .popular-section { padding: 2px 0 8px; }
@@ -292,6 +260,7 @@
     border: 1px solid var(--line);
     border-radius: 16px;
     padding: 8px;
+    box-shadow: 0 2px 8px rgba(22,24,28,0.05);
     transition: transform .13s ease;
   }
   .popular-card:active { transform: scale(0.96); }
@@ -319,7 +288,7 @@
     align-items: center;
     gap: 12px;
     background: var(--card);
-    padding: 11px 2px;
+    padding: 13px 2px;
     border-bottom: 1px solid var(--line);
   }
   .grid.single .product-row:first-child { border-top: 1px solid var(--line); }
@@ -356,68 +325,48 @@
   }
   .ledger-row .price.set { color: var(--brand-deep); font-weight: 800; }
 
-  /* ===== QUICK-ADD (signature element) ===== */
-  .qadd-wrap { flex-shrink: 0; }
-  button.qadd {
-    background: var(--card);
-    border: 1.5px solid var(--brand);
-    color: var(--brand);
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    font-size: 19px;
-    line-height: 1;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform .12s ease, background .12s ease;
-  }
-  button.qadd:active { transform: scale(0.85); background: var(--brand-wash); }
-  .qstepper {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    background: var(--brand);
-    border-radius: 999px;
-    overflow: hidden;
+  /* ===== QO'LDA MIQDOR KIRITISH ===== */
+  .qadd-wrap { flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
+  .qadd-wrap input.qty-manual {
+    width: 44px;
     height: 34px;
-    animation: riseIn .18s ease both;
-  }
-  .qstepper button {
-    background: none;
-    border: none;
-    color: white;
-    width: 32px; height: 34px;
-    font-size: 17px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .qstepper button:active { background: rgba(0,0,0,0.15); }
-  .qstepper input.n {
-    width: 28px;
-    min-width: 0;
     text-align: center;
-    font-weight: 800;
+    border-radius: 10px;
+    border: 1.5px solid var(--line);
     font-size: 13.5px;
-    color: white;
-    background: none;
-    border: none;
-    outline: none;
+    font-weight: 700;
+    font-family: var(--mono);
+    color: var(--ink);
+    background: var(--card);
     padding: 0;
-    font-family: 'Inter', sans-serif;
     -moz-appearance: textfield;
   }
-  .qstepper input.n::-webkit-outer-spin-button,
-  .qstepper input.n::-webkit-inner-spin-button {
+  .qadd-wrap input.qty-manual:focus { outline: none; border-color: var(--brand); }
+  .qadd-wrap input.qty-manual::-webkit-outer-spin-button,
+  .qadd-wrap input.qty-manual::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
-  button.qadd { animation: riseIn .18s ease both; }
+  button.add-btn {
+    background: var(--brand);
+    color: white;
+    border: none;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .12s ease, background .15s ease;
+    flex-shrink: 0;
+  }
+  button.add-btn:active { transform: scale(0.88); }
+  button.add-btn.added { background: var(--mint); }
 
-  /* corner quick-add variant, floats on product image (popular rail) */
-  .corner-qadd { position: absolute; right: 5px; bottom: 5px; }
-  .corner-qadd button.qadd { width: 30px; height: 30px; font-size: 17px; box-shadow: 0 2px 6px rgba(0,0,0,0.18); }
-  .corner-qadd .qstepper { height: 28px; box-shadow: 0 2px 6px rgba(0,0,0,0.18); }
-  .corner-qadd .qstepper button { width: 27px; height: 28px; font-size: 14px; }
-  .corner-qadd .qstepper input.n { width: 22px; font-size: 12px; }
+  /* mahsulot kartasi ostidagi to'liq eni bo'lgan variant (Tavsiya etiladi) */
+  .qadd-wrap.full { width: 100%; margin-top: 8px; }
+  .qadd-wrap.full input.qty-manual { flex: 1; width: 100%; }
+  .qadd-wrap input.qty-manual.confirmed { border-color: var(--mint); background: var(--mint-wash); color: var(--mint); transition: none; }
+
 
   /* ===== BOTTOM NAV ===== */
   nav.bottom-nav {
@@ -4079,8 +4028,7 @@ function render() {
         ? `<img src="${child.iconImg}" alt="${child.name}">`
         : (child.icon || '📁');
       const tileBg = path.length === 0 ? (CATEGORY_COLORS[code] || DEFAULT_TILE_BG) : (CATEGORY_COLORS[path[0]] || DEFAULT_TILE_BG);
-      const count = countProductsDeep(child);
-      row.innerHTML = `<div class="icon" style="background:${tileBg}">${iconHtml}</div><div class="cat-name">${child.name}</div><span class="dots"></span><span class="cat-count">${count} ta</span><span class="chev">›</span>`;
+      row.innerHTML = `<div class="icon" style="background:${tileBg}">${iconHtml}</div><div class="cat-name">${child.name}</div><span class="dots"></span><span class="chev">›</span>`;
       grid.appendChild(row);
     }
     content.appendChild(grid);
@@ -4146,56 +4094,24 @@ function buildProductRow(code, product) {
         <span class="price ${product.price ? 'set' : ''}">${priceLabel}</span>
       </div>
     </div>
-    <div class="qadd-wrap" data-qc="${code}">${qtyControlHTML(code)}</div>
+    <div class="qadd-wrap">
+      <input type="number" class="qty-manual" inputmode="numeric" min="1" value="1" onclick="event.stopPropagation()" onchange="addFromInput(event,'${code}')">
+    </div>
   `;
   return row;
 }
 
-// ============ TEZKOR QO'SHISH (+ / stepper) ============
-function qtyControlHTML(code) {
-  const item = cart.find(i => i.code === code);
-  const qty = item ? item.qty : 0;
-  if (qty <= 0) {
-    return `<button class="qadd" onclick="event.stopPropagation();qtyBump('${code}',1)">+</button>`;
-  }
-  return `<div class="qstepper">
-    <button onclick="event.stopPropagation();qtyBump('${code}',-1)">−</button>
-    <input class="n" type="number" inputmode="numeric" value="${qty}" onclick="event.stopPropagation()" onchange="qtySet('${code}',this.value)">
-    <button onclick="event.stopPropagation();qtyBump('${code}',1)">+</button>
-  </div>`;
-}
-
-function refreshQtyControl(code) {
-  document.querySelectorAll('[data-qc="' + code + '"]').forEach(holder => {
-    holder.innerHTML = qtyControlHTML(code);
-  });
-}
-
-function qtyBump(code, delta) {
+// ============ QO'LDA MIQDOR KIRITIB QO'SHISH ============
+function addFromInput(e, code) {
+  e.stopPropagation();
+  const input = e.target;
+  const qty = parseInt(input.value, 10);
   const product = window.CATALOG_PRODUCT_LOOKUP && window.CATALOG_PRODUCT_LOOKUP[code];
-  if (!product) return;
+  if (!product || !qty || qty < 1) { input.focus(); return; }
   haptic('light');
-  const existing = cart.find(i => i.code === code);
-  if (!existing) {
-    if (delta > 0) addToCart(code, product, 1);
-  } else {
-    existing.qty += delta;
-    if (existing.qty <= 0) { cart = cart.filter(i => i.code !== code); }
-    updateCartBar();
-  }
-  refreshQtyControl(code);
-}
-
-function qtySet(code, value) {
-  const product = window.CATALOG_PRODUCT_LOOKUP && window.CATALOG_PRODUCT_LOOKUP[code];
-  if (!product) return;
-  let qty = parseInt(value, 10);
-  if (!qty || qty < 1) qty = 1;
-  const existing = cart.find(i => i.code === code);
-  if (existing) existing.qty = qty;
-  else cart.push({ code, name: product.name, unit: product.unit, price: product.price, qty });
-  updateCartBar();
-  refreshQtyControl(code);
+  addToCart(code, product, qty);
+  input.classList.add('confirmed');
+  setTimeout(() => input.classList.remove('confirmed'), 500);
 }
 
 // ============ QIDIRUV ============
@@ -4271,10 +4187,12 @@ function renderPopular() {
       <div class="popular-card">
         <div class="icon" style="background:${bg}">
           <img src="${product.imageUrl || ('assets/products/' + code + '.jpg')}" alt="${product.name}" onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='assets/products/${code}.png';}else{this.parentElement.textContent='🧴';}">
-          <div class="corner-qadd" data-qc="${code}">${qtyControlHTML(code)}</div>
         </div>
         <div class="name">${product.name}</div>
         <div class="price">${priceLabel}</div>
+        <div class="qadd-wrap full">
+          <input type="number" class="qty-manual" inputmode="numeric" min="1" value="1" onclick="event.stopPropagation()" onchange="addFromInput(event,'${code}')">
+        </div>
       </div>`;
   }).join('');
   el.innerHTML = `
@@ -4357,7 +4275,7 @@ function isDarkTheme() {
 }
 
 function neutralBg() {
-  return `repeating-linear-gradient(var(--paper) 0 27px, var(--ledger-rule) 27px 28px)`;
+  return `var(--paper)`;
 }
 function updatePageBackground() {
   const topKey = path.length ? path[0] : null;
@@ -4365,7 +4283,7 @@ function updatePageBackground() {
     const tint = isDarkTheme()
       ? darkenHex(CATEGORY_COLORS[topKey], 0.82)
       : lightenHex(CATEGORY_COLORS[topKey], 0.6);
-    document.body.style.background = `repeating-linear-gradient(${tint} 0 27px, var(--ledger-rule) 27px 28px)`;
+    document.body.style.background = tint;
   } else {
     document.body.style.background = neutralBg();
   }
