@@ -4147,6 +4147,7 @@ function addFromRow(e, code) {
 
 // ============ QIDIRUV ============
 let allProductsFlat = null;
+function resetProductCache() { allProductsFlat = null; }
 function flattenAllProducts() {
   if (allProductsFlat) return allProductsFlat;
   const out = [];
@@ -4237,6 +4238,8 @@ function renderPopular() {
 const CATALOG_PRODUCT_LOOKUP = {};
 flattenAllProducts().forEach(({ code, product }) => { CATALOG_PRODUCT_LOOKUP[code] = product; });
 window.CATALOG_PRODUCT_LOOKUP = CATALOG_PRODUCT_LOOKUP;
+window.CATALOG = CATALOG;
+window.getNode = getNode;
 
 // ============ KATEGORIYA RANGLARI (aisle-code) ============
 const CATEGORY_COLORS = {
@@ -4516,18 +4519,95 @@ render();
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const snap = await getDocs(collection(db, 'products'));
-    let updated = 0;
+
+    const toDelete = [];
+    const toMove = [];
+    const toAdd = [];
+    let priceNameImageUpdated = 0;
+
     snap.forEach(d => {
-      const product = window.CATALOG_PRODUCT_LOOKUP && window.CATALOG_PRODUCT_LOOKUP[d.id];
-      if (product) {
-        const data = d.data();
-        if (data.price !== undefined) product.price = data.price;
-        if (data.imageUrl) product.imageUrl = data.imageUrl;
-        if (data.name) product.name = data.name;
-        updated++;
+      const code = d.id;
+      const data = d.data();
+      const product = window.CATALOG_PRODUCT_LOOKUP && window.CATALOG_PRODUCT_LOOKUP[code];
+
+      if (data.deleted) {
+        if (product) toDelete.push(code);
+        return;
+      }
+
+      if (!product) {
+        // Asl katalogda yo'q - admin qo'shgan YANGI mahsulot
+        if (data.categoryPath && data.name) {
+          toAdd.push({ code, name: data.name, price: data.price || 0, unit: data.unit || 'dona', imageUrl: data.imageUrl, categoryPath: data.categoryPath });
+        }
+        return;
+      }
+
+      if (data.categoryPath) {
+        toMove.push({ code, categoryPath: data.categoryPath });
+      }
+
+      if (data.price !== undefined) product.price = data.price;
+      if (data.imageUrl) product.imageUrl = data.imageUrl;
+      if (data.name) product.name = data.name;
+      priceNameImageUpdated++;
+    });
+
+    function removeFromTree(code) {
+      function walk(node) {
+        if (node.products && node.products[code]) { delete node.products[code]; return true; }
+        for (const child of Object.values(node.children || {})) {
+          if (walk(child)) return true;
+        }
+        return false;
+      }
+      walk({ children: window.CATALOG });
+    }
+
+    toDelete.forEach(code => removeFromTree(code));
+
+    toMove.forEach(({ code, categoryPath }) => {
+      const product = window.CATALOG_PRODUCT_LOOKUP[code];
+      removeFromTree(code);
+      const target = getNode(categoryPath);
+      if (target) {
+        target.products = target.products || {};
+        target.products[code] = product;
       }
     });
-    if (updated > 0 && typeof render === 'function') {
+
+    toAdd.forEach(({ code, name, price, unit, imageUrl, categoryPath }) => {
+      const target = getNode(categoryPath);
+      if (target) {
+        target.products = target.products || {};
+        const newProduct = { name, price, unit };
+        if (imageUrl) newProduct.imageUrl = imageUrl;
+        target.products[code] = newProduct;
+      }
+    });
+
+    // Daraxt o'zgargani uchun qidiruv/lookup kesh(lar)ini qayta quramiz
+    if (toDelete.length || toMove.length || toAdd.length) {
+      if (typeof resetProductCache === 'function') resetProductCache();
+      const newLookup = {};
+      const newCodeToTop = {};
+      function rebuildLookups(node, topKey) {
+        for (const [code, p] of Object.entries(node.products || {})) {
+          newLookup[code] = p;
+          newCodeToTop[code] = topKey;
+        }
+        for (const child of Object.values(node.children || {})) {
+          rebuildLookups(child, topKey);
+        }
+      }
+      for (const [topKey, node] of Object.entries(window.CATALOG)) {
+        rebuildLookups(node, topKey);
+      }
+      window.CATALOG_PRODUCT_LOOKUP = newLookup;
+      window.CODE_TO_TOP_KEY = newCodeToTop;
+    }
+
+    if ((priceNameImageUpdated > 0 || toDelete.length || toMove.length || toAdd.length) && typeof render === 'function') {
       render();
     }
   } catch (e) {
